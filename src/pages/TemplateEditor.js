@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { redirect, useParams, useNavigate } from 'react-router-dom';
 import { fetchHtmlTemplateAndData } from '../services/mock/templateService';
 import { Container, Typography, Button, Box } from '@mui/material';
-import { Add, Save } from '@mui/icons-material';
+import { Add, Save, ExitToApp } from '@mui/icons-material';
 import ApiClient from '../services/ApiClient'; // Import ApiClient
 
 const TemplateEditor = () => {
@@ -156,6 +156,14 @@ const TemplateEditor = () => {
                     onClick={handleSaveInvoice}
                 >
                     Ulož fakturu
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<ExitToApp />}
+                    onClick={ () => {navigate('/')}}
+                >
+                    Zavřít
                 </Button>
             </Box>
 

@@ -110,7 +110,7 @@ const Dashboard = () => {
                                         variant="outlined"
                                         fullWidth
                                         sx={{ mb: 1 }}
-                                        onClick={() => navigate(`/invoices/${invoice.id}`)}
+                                        onClick={() => navigate(`/invoice/${invoice.id}`)}
                                     >
                                         {invoice.name || `Faktura ${invoice.id}`}
                                     </Button>

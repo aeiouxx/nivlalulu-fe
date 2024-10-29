@@ -4,8 +4,6 @@ export const fetchTemplates = async () => {
         setTimeout(() => {
             resolve([
                 { id: 1, name: 'Šablona pro malou firmu' },
-                { id: 2, name: 'Šablona pro velkou firmu' },
-                { id: 3, name: 'Šablona pro živnostníky' },
             ]);
         }, 1000); // Simulované zpoždění 1 sekundu
     });
