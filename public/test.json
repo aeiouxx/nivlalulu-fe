@@ -1,0 +1,43 @@
+{
+    "supplier": {
+        "name": "",
+        "address": "",
+        "country": "",
+        "ico": "",
+        "dic": "",
+        "phone": "",
+        "email": ""
+    },
+    "customer": {
+        "name": "",
+        "contact_person": "",
+        "address": "",
+        "country": "",
+        "ico": "",
+        "dic": ""
+    },
+    "invoice": {
+        "number": "",
+        "issue_date": "",
+        "due_date": "",
+        "payment_method": "",
+        "variable_symbol": ""
+    },
+    "items": [
+        {
+            "description": "",
+            "quantity": "",
+            "unit_price": "",
+            "price": "",
+            "tax_rate": "",
+            "tax": "",
+            "total": ""
+        }
+    ],
+    "totals": {
+        "item_total": "",
+        "tax_total": "",
+        "total_due": ""
+    },
+    "issuer": ""
+}
