@@ -23,9 +23,9 @@ class ApiClient {
         if (token) {
             this.client.defaults.headers['Authorization'] = `Bearer ${token}`;
             Cookies.set('authToken', token, {
-                expires: 1, // platnost 1 den
-                sameSite: 'Lax', // Nastavení atributu SameSite na Lax
-                secure: true, // Doporučeno pro HTTPS, ale volitelné pro localhost
+                expires: 1, // Platnost 1 den
+                sameSite: 'None', // Explicitně nastaví SameSite na 'None'
+                secure: true // Vyžaduje HTTPS
             }); // Uložení tokenu do cookies
         } else {
             delete this.client.defaults.headers['Authorization'];
@@ -91,4 +91,4 @@ class ApiClient {
     }
 }
 
-export default new ApiClient('http://localhost:8080'); // Nastavte baseURL podle serveru
+export default new ApiClient('http://localhost:3001'); // Nastavte baseURL podle serveru

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { registerUser } from '../services/mock/authService';
+import AuthService from '../services/AuthService';
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('');
@@ -11,6 +11,14 @@ const RegisterPage = () => {
     const [confirmPassword, setConfirmPassword] = useState(''); // Nový stav pro potvrzení hesla
     const [error, setError] = useState(''); // Stav pro chybovou zprávu
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (confirmPassword && password !== confirmPassword) {
+            setError('Hesla se neshodují');
+        } else {
+            setError('');
+        }
+    }, [password, confirmPassword]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -22,7 +30,7 @@ const RegisterPage = () => {
         }
 
         try {
-            await registerUser({ username, email, password });
+            await AuthService.registerUser(username, password, email);
             navigate('/'); // Přesměrování na hlavní stránku po úspěšné registraci
         } catch (error) {
             console.error('Failed to register:', error);
@@ -94,7 +102,7 @@ const RegisterPage = () => {
                     />
                     {/* Zobrazení chybové zprávy, pokud se hesla neshodují */}
                     {error && (
-                        <Typography color="error" sx={{ mt: 1 }}>
+                        <Typography className="error" sx={{ mt: 1 }}>
                             {error}
                         </Typography>
                     )}

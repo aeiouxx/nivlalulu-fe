@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/mock/authService';
+import AuthService from '../services/AuthService';
+
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(''); // Stav pro chybovou zprávu
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const LoginPage = () => {
         event.preventDefault();
         
         try {
-            await loginUser({ email, password });
+            await AuthService.loginUser(username, password);
             navigate('/'); // Přesměrování na hlavní stránku po přihlášení
         } catch (error) {
             console.error('Failed to log in:', error);
@@ -43,13 +44,13 @@ const LoginPage = () => {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Emailová adresa"
-                        name="email"
-                        autoComplete="email"
+                        id="username"
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField
                         margin="normal"
@@ -65,7 +66,7 @@ const LoginPage = () => {
                     />
                     {/* Zobrazení chybové zprávy, pokud přihlášení selže */}
                     {error && (
-                        <Typography color="error" sx={{ mt: 1 }}>
+                        <Typography className="error" sx={{ mt: 1 }}>
                             {error}
                         </Typography>
                     )}

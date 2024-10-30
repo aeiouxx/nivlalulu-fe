@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, Button, Grid, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../services/mock/authService';
-import { fetchInvoices } from '../services/mock/invoiceService';
-import { fetchTemplates } from '../services/mock/templateService';
+import AuthService from '../services/AuthService';
+import InvoiceService from '../services/InvoiceService';
+import TemplateService from '../services/TemplateService';
 
 const Dashboard = () => {
     const [invoices, setInvoices] = useState([]); // Stav pro seznam faktur
@@ -13,19 +13,19 @@ const Dashboard = () => {
     useEffect(() => {
         const loadInvoices = async () => {
             try {
-                const invoiceData = await fetchInvoices(); // Načtení faktur z backendu
+                const invoiceData = await InvoiceService.getAllInvoices(); // Načtení faktur
                 setInvoices(invoiceData);
             } catch (error) {
-                console.error('Failed to load invoices:', error);
+                console.error('Chyba při načítání faktur:', error);
             }
         };
 
         const loadTemplates = async () => {
             try {
-                const templateData = await fetchTemplates(); // Načtení šablon z backendu
+                const templateData = await TemplateService.getAllTemplates(); // Načtení šablon
                 setTemplates(templateData);
             } catch (error) {
-                console.error('Failed to load templates:', error);
+                console.error('Chyba při načítání šablon:', error);
             }
         };
 
@@ -34,26 +34,13 @@ const Dashboard = () => {
     }, []);
 
     const handleLogout = () => {
-        logoutUser();
+        AuthService.logoutUser(); // Odhlášení uživatele pomocí MockAuthService
         navigate('/login');
     };
 
     const handleProfile = () => {
-        navigate('/profile');
+        navigate('/profil');
     };
-
-    useEffect(() => {
-        const loadTemplates = async () => {
-            try {
-                const templateData = await fetchTemplates();
-                setTemplates(templateData);
-            } catch (error) {
-                console.error('Failed to load templates:', error);
-            }
-        };
-
-        loadTemplates();
-    }, []);
 
     const handleOpenTemplate = (templateId) => {
         navigate(`/template/${templateId}`); // Přesměrování na editor šablon
@@ -63,7 +50,11 @@ const Dashboard = () => {
         <Container maxWidth="lg">
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4 }}>
                 <Typography variant="h4">Vítejte na hlavní stránce!</Typography>
-                <Box>
+                <Box 
+                display="flex"
+                flexDirection={{ xs: 'column', sm: 'row' }} // Mobilní: sloupec, větší obrazovky: řádek
+                gap={2} // Mezera mezi boxy
+                >
                     <Button variant="outlined" color="primary" onClick={handleProfile} sx={{ mr: 2 }}>
                         Profil
                     </Button>
@@ -88,7 +79,7 @@ const Dashboard = () => {
                                     sx={{ mb: 1 }}
                                     onClick={() => handleOpenTemplate(template.id)}
                                 >
-                                    {template.name}
+                                    {template.name || `Šablona ${template.id}`}
                                 </Button>
                                 ))
                             ) : (

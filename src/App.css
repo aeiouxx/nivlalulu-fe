@@ -1,3 +1,49 @@
+* {
+  --dark: #212A31;
+  --blue: #124E66;
+  --medium: #2E3944;
+  --light-blue: #748d928c;
+  --light: #D3D9D4;
+
+  color: var(--dark) !important;
+}
+
+body{
+  background-color: var(--light);
+}
+
+.MuiButton-contained {
+  background-color: var(--blue) !important;
+  color: var(--light) !important;
+}
+
+.MuiButton-outlined {
+  border-color: var(--blue);
+}
+
+ button.Mui-disabled {
+  background-color: var(--light-blue) !important;
+  color: var(--light);
+}
+
+.MuiPaper-root {
+  background-color: var(--light-blue) !important;
+}
+
+.error {
+  color: red !important;
+}
+
+.MuiButtonBase-root {
+  margin: 0 !important;
+  transition: all 5s;
+}
+
+.MuiButtonBase-root:hover {
+  box-shadow: 0 0.5em 0.5em -0.4em var(--dark) !important;
+  transform: translateY(-0.25em);
+}
+
 .App {
   text-align: center;
 }
