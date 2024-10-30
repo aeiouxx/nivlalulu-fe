@@ -1,9 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography, Box } from '@mui/material';
-import { fetchInvoice } from '../services/mock/invoiceService'; 
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Typography, Box, Button } from '@mui/material';
+import { ExitToApp, Delete } from '@mui/icons-material';
+import InvoiceService from '../services/InvoiceService';
+import TemplateService from '../services/TemplateService';
+
 
 const InvoiceViewer = () => {
+    const navigate = useNavigate();
     const { id } = useParams(); // ID faktury získané z URL
     const [jsonData, setJsonData] = useState({});
     const [htmlTemplate, setHtmlTemplate] = useState(''); // HTML šablona ze serveru
@@ -13,8 +17,10 @@ const InvoiceViewer = () => {
         const loadInvoiceData = async () => {
             try {
                 // Požadavek na server nebo simulovanou službu pro HTML šablonu a data faktury
-                const { html, data } = await fetchInvoice(id);
-                setHtmlTemplate(html); // Nastavení HTML šablony
+                const data = await InvoiceService.getInvoiceById(id);
+                const html_data = await TemplateService.loadHTMLTemplate(data.template_id);
+                console.log(html_data);
+                setHtmlTemplate(html_data); // Nastavení HTML šablony
                 setJsonData(data); // Nastavení dat faktury
             } catch (error) {
                 console.error('Chyba při načítání faktury:', error);
@@ -66,13 +72,35 @@ const InvoiceViewer = () => {
         processFields(jsonData);
     };
 
+    const handleDelete = (templateId) => {
+        InvoiceService.deleteInvoice(id);
+        navigate("/");
+    };
+
     return (
         <Container maxWidth="lg">
             <Typography variant="h4" sx={{ mt: 4 }}>Zobrazení faktury</Typography>
+            <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<ExitToApp />}
+                    onClick={() => { navigate('/') }}
+                >
+                    Zavřít
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<Delete />}
+                    onClick={handleDelete}
+                >
+                    Odstranit
+                </Button>
+            </Box>
             <Box sx={{ mt: 2, border: '1px solid #ddd', padding: 2 }} ref={templateContainer}>
                 {/* HTML šablona se vkládá přímo do templateContainer */}
             </Box>
-
             {/* CSS pro úpravu zobrazení pro čtení */}
             <style>
                 {`
