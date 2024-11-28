@@ -1,27 +1,27 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Button } from '@mui/material';
-import { ExitToApp, Delete } from '@mui/icons-material';
-import InvoiceService from '../services/InvoiceService';
-import TemplateService from '../services/TemplateService';
-
+import { ExitToApp, Delete, PictureAsPdf } from '@mui/icons-material';
+import InvoiceService from '../services/invoiceService';
+import TemplateService from '../services/templateService';
+import html2pdf from 'html2pdf.js';
 
 const InvoiceViewer = () => {
     const navigate = useNavigate();
-    const { id } = useParams(); // ID faktury získané z URL
+    const { id } = useParams();
+    const [invoiceName, setInvoiceName] = useState('');
     const [jsonData, setJsonData] = useState({});
-    const [htmlTemplate, setHtmlTemplate] = useState(''); // HTML šablona ze serveru
-    const templateContainer = useRef(null); // Ref na kontejner pro šablonu
+    const [htmlTemplate, setHtmlTemplate] = useState('');
+    const templateContainer = useRef(null);
 
     useEffect(() => {
         const loadInvoiceData = async () => {
             try {
-                // Požadavek na server nebo simulovanou službu pro HTML šablonu a data faktury
                 const data = await InvoiceService.getInvoiceById(id);
+                setInvoiceName(data.invoice?.number);
                 const html_data = await TemplateService.loadHTMLTemplate(data.template_id);
-                console.log(html_data);
-                setHtmlTemplate(html_data); // Nastavení HTML šablony
-                setJsonData(data); // Nastavení dat faktury
+                setHtmlTemplate(html_data);
+                setJsonData(data);
             } catch (error) {
                 console.error('Chyba při načítání faktury:', error);
             }
@@ -32,13 +32,11 @@ const InvoiceViewer = () => {
 
     useEffect(() => {
         if (templateContainer.current && htmlTemplate) {
-            // Vloží HTML šablonu do kontejneru
             templateContainer.current.innerHTML = htmlTemplate;
             populateFields(templateContainer.current);
         }
     }, [htmlTemplate, jsonData]);
 
-    // Funkce pro vyplnění dat v HTML šabloně
     const populateFields = (container) => {
         const processFields = (data, path = '') => {
             Object.keys(data).forEach((key) => {
@@ -46,11 +44,11 @@ const InvoiceViewer = () => {
                 const field = container.querySelector(`[data-field="${fullPath}"]`);
 
                 if (typeof data[key] === 'object' && !Array.isArray(data[key])) {
-                    processFields(data[key], fullPath); // Rekurzivní zpracování pro vnořená data
+                    processFields(data[key], fullPath);
                 } else if (Array.isArray(data[key])) {
                     const itemsContainer = container.querySelector(`[data-item="${fullPath}"]`);
                     if (itemsContainer) {
-                        itemsContainer.innerHTML = ''; // Vyčistíme kontejner položek
+                        itemsContainer.innerHTML = '';
                         data[key].forEach((item) => {
                             const itemRow = document.createElement('tr');
                             Object.keys(item).forEach((itemKey) => {
@@ -63,8 +61,8 @@ const InvoiceViewer = () => {
                         });
                     }
                 } else if (field) {
-                    field.textContent = data[key]; // Vyplnění pole pro čtení bez možnosti úprav
-                    field.classList.add('readonly-field'); // Přidání třídy pro stylizaci pouze pro čtení
+                    field.textContent = data[key];
+                    field.classList.add('readonly-field');
                 }
             });
         };
@@ -72,9 +70,22 @@ const InvoiceViewer = () => {
         processFields(jsonData);
     };
 
-    const handleDelete = (templateId) => {
+    const handleDelete = () => {
         InvoiceService.deleteInvoice(id);
-        navigate("/");
+        navigate('/');
+    };
+
+    const handleExportToPDF = () => {
+        const element = templateContainer.current;
+        if (element) {
+            const options = {
+                margin: 1,
+                filename: `${invoiceName}.pdf`,
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            };
+            html2pdf().set(options).from(element).save();
+        }
     };
 
     return (
@@ -85,7 +96,7 @@ const InvoiceViewer = () => {
                     variant="contained"
                     color="secondary"
                     startIcon={<ExitToApp />}
-                    onClick={() => { navigate('/') }}
+                    onClick={() => navigate('/')}
                 >
                     Zavřít
                 </Button>
@@ -97,14 +108,20 @@ const InvoiceViewer = () => {
                 >
                     Odstranit
                 </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<PictureAsPdf />}
+                    onClick={handleExportToPDF}
+                >
+                    Exportovat do PDF
+                </Button>
             </Box>
             <Box sx={{ mt: 2, border: '1px solid #ddd', padding: 2 }} ref={templateContainer}>
                 {/* HTML šablona se vkládá přímo do templateContainer */}
             </Box>
-            {/* CSS pro úpravu zobrazení pro čtení */}
             <style>
                 {`
-                    /* Styl pro zobrazení pro čtení */
                     .readonly-field {
                         background-color: #f5f5f5;
                         color: #333;

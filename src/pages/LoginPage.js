@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
+import AuthService from '../services/authService';
 
 
 const LoginPage = () => {
@@ -16,7 +16,7 @@ const LoginPage = () => {
         
         try {
             await AuthService.loginUser(username, password);
-            navigate('/'); // Přesměrování na hlavní stránku po přihlášení
+            navigate('/');
         } catch (error) {
             console.error('Failed to log in:', error);
             setError('Nesprávné přihlašovací údaje. Zkuste to znovu.');

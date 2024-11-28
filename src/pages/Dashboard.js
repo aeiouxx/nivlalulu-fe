@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, Button, Grid, Paper, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
-import InvoiceService from '../services/InvoiceService';
-import TemplateService from '../services/TemplateService';
+import AuthService from '../services/authService';
+import InvoiceService from '../services/invoiceService';
+import TemplateService from '../services/templateService';
 
 const Dashboard = () => {
     const [invoices, setInvoices] = useState([]); // Stav pro seznam faktur
