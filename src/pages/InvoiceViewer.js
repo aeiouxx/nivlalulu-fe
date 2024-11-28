@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Button } from '@mui/material';
-import { ExitToApp, Delete, PictureAsPdf } from '@mui/icons-material';
+import {ExitToApp, Delete, PictureAsPdf, Edit} from '@mui/icons-material';
 import InvoiceService from '../services/invoiceService';
 import TemplateService from '../services/templateService';
 import html2pdf from 'html2pdf.js';
@@ -88,6 +88,10 @@ const InvoiceViewer = () => {
         }
     };
 
+    const handleEditInvoice = () => {
+        navigate(`/invoice/update/${id}`);
+    };
+
     return (
         <Container maxWidth="lg">
             <Typography variant="h4" sx={{ mt: 4 }}>Zobrazení faktury</Typography>
@@ -115,6 +119,14 @@ const InvoiceViewer = () => {
                     onClick={handleExportToPDF}
                 >
                     Exportovat do PDF
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<Edit />}
+                    onClick={handleEditInvoice}
+                >
+                    Úprava
                 </Button>
             </Box>
             <Box sx={{ mt: 2, border: '1px solid #ddd', padding: 2 }} ref={templateContainer}>

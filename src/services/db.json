@@ -2,7 +2,7 @@
   "invoices": [
     {
       "id": "1",
-      "name": "Zálohová faktura",
+      "name": "2198000010",
       "template_id": "1",
       "supplier": {
         "name": "Novák s.r.o.",
@@ -62,7 +62,7 @@
         "tax_total": "7321,78",
         "total_due": "42187,38"
       },
-      "issuer": "Jan Novák"
+      "issuer": "Jana Novákováková"
     }
   ],
   "templates": [
