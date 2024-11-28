@@ -2,7 +2,7 @@ import React, { useState, useEffect  } from 'react';
 import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import AuthService from '../services/AuthService';
+import AuthService from '../services/authService';
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('');

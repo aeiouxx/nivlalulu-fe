@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import { Save, ExitToApp } from '@mui/icons-material';
-import AuthService from '../services/AuthService';
+import AuthService from '../services/authService';
 
 const ProfilePage = () => {
     const navigate = useNavigate();

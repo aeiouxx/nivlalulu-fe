@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Box, TextField } from '@mui/material';
 import { Add, Save, ExitToApp } from '@mui/icons-material';
-import TemplateService from '../services/TemplateService';
-import InvoiceService from '../services/InvoiceService';
+import TemplateService from '../services/templateService';
+import InvoiceService from '../services/invoiceService';
 
 const TemplateEditor = () => {
     const navigate = useNavigate();
