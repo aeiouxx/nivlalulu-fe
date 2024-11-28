@@ -135,6 +135,13 @@
       "password": "heslo",
       "email": "lukas@test.cz",
       "token": "8kmhyQvbMaAiVzk4jjlN"
+    },
+    {
+      "id": "1f38",
+      "username": "levinestark",
+      "password": "Marvel12",
+      "email": "lucka.scholz@gmail.com",
+      "token": "qu4MHJjSUxEfIDA58vep"
     }
   ]
 }
