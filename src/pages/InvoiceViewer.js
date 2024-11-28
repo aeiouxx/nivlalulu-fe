@@ -18,7 +18,7 @@ const InvoiceViewer = () => {
         const loadInvoiceData = async () => {
             try {
                 const data = await InvoiceService.getInvoiceById(id);
-                setInvoiceName(data.invoice?.number);
+                setInvoiceName(data?.name);
                 const html_data = await TemplateService.loadHTMLTemplate(data.template_id);
                 setHtmlTemplate(html_data);
                 setJsonData(data);
