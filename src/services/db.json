@@ -63,6 +63,52 @@
         "total_due": "42187,38"
       },
       "issuer": "Jana Novákováková"
+    },
+    {
+      "id": "35ba",
+      "supplier": {
+        "name": "Test",
+        "address": "jhbwed",
+        "country": "eve",
+        "ico": "erb",
+        "dic": "erv",
+        "phone": "erv",
+        "email": "erv"
+      },
+      "customer": {
+        "name": "erv",
+        "contact_person": "erv",
+        "address": "evropské",
+        "country": "erb",
+        "ico": "erv",
+        "dic": "erv"
+      },
+      "invoice": {
+        "number": "00145",
+        "issue_date": "erv",
+        "due_date": "erv",
+        "payment_method": "erv",
+        "variable_symbol": "erv"
+      },
+      "items": [
+        {
+          "description": "erv",
+          "quantity": "evropské",
+          "unit_price": "erb",
+          "price": "evropské",
+          "tax_rate": "erb",
+          "tax": "erv",
+          "total": "erv"
+        }
+      ],
+      "totals": {
+        "item_total": "rev",
+        "tax_total": "erv",
+        "total_due": "erv"
+      },
+      "issuer": "",
+      "template_id": "1",
+      "name": "00145"
     }
   ],
   "templates": [

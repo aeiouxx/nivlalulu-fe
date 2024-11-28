@@ -9,6 +9,7 @@ import InvoiceViewer from './pages/InvoiceViewer';
 import Profil from './pages/Profil';
 import ProtectedRoute from './components/ProtectedRoute';
 import { CssBaseline, Container } from '@mui/material';
+import InvoiceEditor from "./pages/EditInvoice";
 
 function App() {
     return (
@@ -21,12 +22,12 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
 
                     {/* Chráněné trasy */}
-                    <Route element={<ProtectedRoute />}>
+                    {/* TODO PŘIDAT  <Route element={<ProtectedRoute />}>*/}
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/profil" element={<Profil />} />
                         <Route path="/template/:id" element={<TemplateEditor />} /> {/* Editor šablon */}
                         <Route path="/invoice/:id" element={<InvoiceViewer />} />
-                    </Route>
+                        <Route path="/invoice/update/:id" element={<InvoiceEditor />} />
 
                     {/* Trvalá trasa pro neplatné cesty */}
                     <Route path="*" element={<Navigate to="/login" />} />
