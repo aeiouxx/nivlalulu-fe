@@ -68,7 +68,6 @@ const ProfilePage = () => {
                     name="username"
                     value={userData.username}
                     onChange={handleChange}
-                    disabled // Předpoklad, že uživatelské jméno není editovatelné
                 />
                 <TextField
                     fullWidth
@@ -111,7 +110,6 @@ const ProfilePage = () => {
                     startIcon={<Save />}
                     onClick={handleSave}
                     disabled={JSON.stringify(userData) === JSON.stringify(originalData)}
-                    sx={{ mt: 3 }}
                 >
                     Uložit změny
                 </Button>

@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Box, Button } from '@mui/material';
-import {ExitToApp, Delete, PictureAsPdf, Edit} from '@mui/icons-material';
+import { Container, Typography, Button, Box } from '@mui/material';
+import { ExitToApp, Delete, PictureAsPdf, Edit } from '@mui/icons-material';
+import TemplateRenderer from '../components/TemplateRenderer';
 import InvoiceService from '../services/invoiceService';
 import TemplateService from '../services/templateService';
 import html2pdf from 'html2pdf.js';
@@ -10,18 +11,18 @@ const InvoiceViewer = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [invoiceName, setInvoiceName] = useState('');
-    const [jsonData, setJsonData] = useState({});
+    const [jsonData, setJsonData] = useState(null);
     const [htmlTemplate, setHtmlTemplate] = useState('');
-    const templateContainer = useRef(null);
 
     useEffect(() => {
         const loadInvoiceData = async () => {
             try {
                 const data = await InvoiceService.getInvoiceById(id);
-                setInvoiceName(data?.name);
-                const html_data = await TemplateService.loadHTMLTemplate(data.template_id);
-                setHtmlTemplate(html_data);
+                const templateData = await TemplateService.loadHTMLTemplate(data.template_id);
+
+                setInvoiceName(data?.name || '');
                 setJsonData(data);
+                setHtmlTemplate(templateData);
             } catch (error) {
                 console.error('Chyba při načítání faktury:', error);
             }
@@ -30,53 +31,13 @@ const InvoiceViewer = () => {
         loadInvoiceData();
     }, [id]);
 
-    useEffect(() => {
-        if (templateContainer.current && htmlTemplate) {
-            templateContainer.current.innerHTML = htmlTemplate;
-            populateFields(templateContainer.current);
-        }
-    }, [htmlTemplate, jsonData]);
-
-    const populateFields = (container) => {
-        const processFields = (data, path = '') => {
-            Object.keys(data).forEach((key) => {
-                const fullPath = path ? `${path}.${key}` : key;
-                const field = container.querySelector(`[data-field="${fullPath}"]`);
-
-                if (typeof data[key] === 'object' && !Array.isArray(data[key])) {
-                    processFields(data[key], fullPath);
-                } else if (Array.isArray(data[key])) {
-                    const itemsContainer = container.querySelector(`[data-item="${fullPath}"]`);
-                    if (itemsContainer) {
-                        itemsContainer.innerHTML = '';
-                        data[key].forEach((item) => {
-                            const itemRow = document.createElement('tr');
-                            Object.keys(item).forEach((itemKey) => {
-                                const cell = document.createElement('td');
-                                cell.textContent = item[itemKey];
-                                cell.classList.add(`${key}_${itemKey}`);
-                                itemRow.appendChild(cell);
-                            });
-                            itemsContainer.appendChild(itemRow);
-                        });
-                    }
-                } else if (field) {
-                    field.textContent = data[key];
-                    field.classList.add('readonly-field');
-                }
-            });
-        };
-
-        processFields(jsonData);
-    };
-
-    const handleDelete = () => {
-        InvoiceService.deleteInvoice(id);
+    const handleDelete = async () => {
+        await InvoiceService.deleteInvoice(id);
         navigate('/');
     };
 
     const handleExportToPDF = () => {
-        const element = templateContainer.current;
+        const element = document.querySelector('#template-container');
         if (element) {
             const options = {
                 margin: 1,
@@ -88,59 +49,30 @@ const InvoiceViewer = () => {
         }
     };
 
-    const handleEditInvoice = () => {
-        navigate(`/invoice/update/${id}`);
-    };
-
     return (
         <Container maxWidth="lg">
             <Typography variant="h4" sx={{ mt: 4 }}>Zobrazení faktury</Typography>
             <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<ExitToApp />}
-                    onClick={() => navigate('/')}
-                >
+                <Button variant="contained" color="secondary" startIcon={<ExitToApp />} onClick={() => navigate('/')}>
                     Zavřít
                 </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<Delete />}
-                    onClick={handleDelete}
-                >
+                <Button variant="contained" color="secondary" startIcon={<Delete />} onClick={handleDelete}>
                     Odstranit
                 </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<PictureAsPdf />}
-                    onClick={handleExportToPDF}
-                >
+                <Button variant="contained" color="primary" startIcon={<PictureAsPdf />} onClick={handleExportToPDF}>
                     Exportovat do PDF
                 </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<Edit />}
-                    onClick={handleEditInvoice}
-                >
+                <Button variant="contained" color="primary" startIcon={<Edit />} onClick={() => navigate(`/invoice/update/${id}`)}>
                     Úprava
                 </Button>
             </Box>
-            <Box sx={{ mt: 2, border: '1px solid #ddd', padding: 2 }} ref={templateContainer}>
-                {/* HTML šablona se vkládá přímo do templateContainer */}
-            </Box>
-            <style>
-                {`
-                    .readonly-field {
-                        background-color: #f5f5f5;
-                        color: #333;
-                        cursor: default;
-                    }
-                `}
-            </style>
+            {htmlTemplate && jsonData ? (
+                <div id="template-container">
+                    <TemplateRenderer htmlTemplate={htmlTemplate} jsonData={jsonData} editable={false} />
+                </div>
+            ) : (
+                <Typography>Načítání...</Typography>
+            )}
         </Container>
     );
 };

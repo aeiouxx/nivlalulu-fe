@@ -24,8 +24,8 @@ class ApiClient {
             this.client.defaults.headers['Authorization'] = `Bearer ${token}`;
             Cookies.set('authToken', token, {
                 expires: 1, // Platnost 1 den
-                sameSite: 'None', // Explicitně nastaví SameSite na 'None'
-                secure: true // Vyžaduje HTTPS
+                sameSite: 'Lax', // Explicitně nastaví SameSite na 'None'
+                secure: false // Vyžaduje HTTPS
             }); // Uložení tokenu do cookies
         } else {
             delete this.client.defaults.headers['Authorization'];
