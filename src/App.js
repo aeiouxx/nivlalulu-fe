@@ -9,7 +9,7 @@ import InvoiceViewer from './pages/InvoiceViewer';
 import Profil from './pages/Profil';
 import ProtectedRoute from './components/ProtectedRoute';
 import { CssBaseline, Container } from '@mui/material';
-import InvoiceEditor from "./pages/EditInvoice";
+import InvoiceEditor from "./pages/InvoiceEditor";
 
 function App() {
     return (
