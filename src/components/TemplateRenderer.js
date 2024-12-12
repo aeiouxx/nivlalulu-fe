@@ -2,6 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton } from '@mui/material';
+import ReactDOM from 'react-dom';
+
+const itemsPerFirstPage = 10;
+const itemsPerSubsequentPage = 20;
 
 const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onUpdateData, itemTemplate }) => {
     const templateContainer = useRef(null);
@@ -9,14 +13,54 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
     useEffect(() => {
         if (templateContainer.current && htmlTemplate) {
             templateContainer.current.innerHTML = htmlTemplate;
+            paginateItems();
             populateFields(templateContainer.current);
         }
     }, [htmlTemplate, jsonData]);
 
+    const paginateItems = () => {
+        const container = templateContainer.current;
+        const items = jsonData?.items || [];
+
+        const firstSection = container.querySelector('.item_section');
+        if (!firstSection) return;
+
+        container.querySelectorAll('.item_section').forEach((section, index) => {
+            if (index > 0) section.remove();
+        });
+
+        let currentSection = firstSection;
+        let itemsContainer = currentSection.querySelector('[data-item="items"]');
+        itemsContainer.innerHTML = '';
+
+        let currentItemCount = 0;
+        let currentLimit = itemsPerFirstPage;
+
+        items.forEach((item, index) => {
+            if (currentItemCount >= currentLimit) {
+                currentSection = createNewSection(firstSection);
+                currentSection.style.marginTop = '20px';
+                currentSection.style.pageBreakBefore = 'always';
+                container.appendChild(currentSection);
+                itemsContainer = currentSection.querySelector('[data-item="items"]');
+                currentItemCount = 0;
+                currentLimit = itemsPerSubsequentPage;
+            }
+
+            const row = createItemRow(item, 'items', index);
+            itemsContainer.appendChild(row);
+            currentItemCount++;
+        });
+
+        if (editable) {
+            addAddButton(itemsContainer, 'items');
+        }
+
+        moveTotalsToLastPage(container);
+    };
+
     const populateFields = (container) => {
         if (!jsonData) return;
-
-        cleanEventListeners(container);
 
         const processFields = (data, path = '') => {
             Object.keys(data).forEach((key) => {
@@ -25,93 +69,80 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
 
                 if (typeof data[key] === 'object' && data[key] !== null && !Array.isArray(data[key])) {
                     processFields(data[key], fullPath);
-                } else if (Array.isArray(data[key])) {
-                    const itemsContainer = container.querySelector(`[data-item="${fullPath}"]`);
-                    if (itemsContainer) {
-                        itemsContainer.innerHTML = '';
-                        data[key].forEach((item, index) => {
-                            const itemRow = createItemRow(item, fullPath, index);
-                            itemsContainer.appendChild(itemRow);
-                        });
-
-                        if (editable) {
-                            const addButton = (
-                                <Button
-                                    onClick={() => handleAddItem(fullPath)}
-                                    title="Přidat položku"
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    <AddIcon />
-                                </Button>
-                            );
-
-                            const addButtonWrapper = document.createElement('div');
-                            addButtonWrapper.className = 'add-button-wrapper';
-                            addButtonWrapper.appendChild(createReactElement(addButton));
-                            itemsContainer.appendChild(addButtonWrapper);
-                        }
-                    }
                 } else if (field) {
                     field.textContent = data[key] || '';
                     if (editable) {
                         field.setAttribute('contentEditable', true);
                         field.classList.add('editable-highlight');
-                        field.addEventListener('blur', (e) => {
-                            onFieldChange && onFieldChange(fullPath, e.target.innerText);
-                        });
+                        field.addEventListener('blur', (e) => onFieldChange(fullPath, e.target.innerText));
                     }
                 }
             });
         };
 
-        const createItemRow = (item, path, index) => {
-            const itemRow = document.createElement('tr');
-
-            Object.keys(item).forEach((itemKey) => {
-                const cell = document.createElement('td');
-                cell.textContent = item[itemKey];
-                if (editable) {
-                    cell.contentEditable = true;
-                    cell.addEventListener('blur', (e) => onFieldChange(`${path}.${index}.${itemKey}`, e.target.innerText));
-                }
-                itemRow.appendChild(cell);
-            });
-
-            if (editable) {
-                const removeButtonCell = document.createElement('td');
-                removeButtonCell.style.textAlign = 'center'; // Zarovnat na střed
-
-                const buttonWrapper = document.createElement('div');
-                buttonWrapper.style.display = 'inline-block';
-                buttonWrapper.style.margin = '0 4px';
-
-                const removeButton = (
-                    <IconButton color="error" size="small" onClick={() => handleRemoveItem(path, index)}>
-                        <DeleteIcon />
-                    </IconButton>
-                );
-
-                import('react-dom').then((ReactDOM) => {
-                    ReactDOM.render(removeButton, buttonWrapper);
-                });
-
-                removeButtonCell.appendChild(buttonWrapper);
-                itemRow.appendChild(removeButtonCell);
-            }
-
-            return itemRow;
-        };
-
         processFields(jsonData);
     };
 
-    // Pomocná funkce pro vytvoření React elementu a jeho vložení do DOM
-    const createReactElement = (element) => {
-        const container = document.createElement('div');
-        import('react-dom').then((ReactDOM) => {
-            ReactDOM.render(element, container);
+    const createNewSection = (templateSection) => {
+        const newSection = templateSection.cloneNode(true);
+        const newItemsContainer = newSection.querySelector('[data-item="items"]');
+        newItemsContainer.innerHTML = '';
+        return newSection;
+    };
+
+    const createItemRow = (item, path, index) => {
+        const row = document.createElement('tr');
+
+        Object.keys(item).forEach((key) => {
+            const cell = document.createElement('td');
+            cell.textContent = item[key];
+            if (editable) {
+                cell.contentEditable = true;
+                cell.classList.add('editable-highlight');
+                cell.addEventListener('blur', (e) => onFieldChange(`${path}.${index}.${key}`, e.target.innerText));
+            }
+            row.appendChild(cell);
         });
-        return container;
+
+        if (editable) {
+            const removeButtonCell = document.createElement('td');
+            ReactDOM.render(
+                <IconButton color="error" size="small" onClick={() => handleRemoveItem(path, index)}>
+                    <DeleteIcon />
+                </IconButton>,
+                removeButtonCell
+            );
+            row.appendChild(removeButtonCell);
+        }
+
+        return row;
+    };
+
+    const addAddButton = (container, path) => {
+        const addButtonRow = document.createElement('tr');
+        const addButtonCell = document.createElement('td');
+        addButtonCell.colSpan = 8;
+
+        ReactDOM.render(
+            <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleAddItem(path)}>
+                Přidat položku
+            </Button>,
+            addButtonCell
+        );
+
+        addButtonRow.appendChild(addButtonCell);
+        container.appendChild(addButtonRow);
+    };
+
+    const moveTotalsToLastPage = (container) => {
+        const totalsSection = container.querySelector('.footer');
+        if (!totalsSection) return;
+
+        totalsSection.remove();
+
+        const allSections = container.querySelectorAll('.item_section');
+        const lastSection = allSections[allSections.length - 1];
+        lastSection.parentElement.appendChild(totalsSection);
     };
 
     const handleAddItem = (path) => {
@@ -119,28 +150,11 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
             const newData = JSON.parse(JSON.stringify(prevData));
             const keys = path.split('.');
             let current = newData;
-
             keys.forEach((key) => {
                 if (!current[key]) current[key] = [];
                 current = current[key];
             });
-
             current.push({ ...itemTemplate });
-            return newData;
-        });
-    };
-
-    const handleArrayFieldChange = (path, index, field, value) => {
-        onUpdateData((prevData) => {
-            const newData = JSON.parse(JSON.stringify(prevData));
-            const keys = path.split('.');
-            let current = newData;
-
-            keys.forEach((key) => {
-                current = current[key];
-            });
-
-            current[index][field] = value;
             return newData;
         });
     };
@@ -150,21 +164,11 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
             const newData = JSON.parse(JSON.stringify(prevData));
             const keys = path.split('.');
             let current = newData;
-
             keys.forEach((key) => {
                 current = current[key];
             });
-
             current.splice(index, 1);
             return newData;
-        });
-    };
-
-    const cleanEventListeners = (container) => {
-        const elements = container.querySelectorAll('[contentEditable="true"], button');
-        elements.forEach((el) => {
-            const newEl = el.cloneNode(true);
-            el.replaceWith(newEl);
         });
     };
 
