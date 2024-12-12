@@ -5,23 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zálohová faktura</title>
     <style>
-        /* Nastavení stránky A4 a tiskových vlastností */
-        @page {
-            size: A4;
-            margin: 0;
-        }
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             color: #000;
-            width: 210mm;
-            height: 297mm;
-            box-sizing: border-box;
         }
         .invoice-container {
-            padding: 15mm;
-            width: 180mm;
+            width: 100%;
             margin: auto;
             box-sizing: border-box;
         }
@@ -79,7 +68,6 @@
             min-width: 100px; /* Minimální šířka pole */
             padding: 2px 5px;
             border-bottom: 1px dotted #000; /* Dolní ohraničení pole */
-            background-color: #f9f9f9; /* Světlé pozadí pro odlišení */
             text-align: left;
         }
         
@@ -133,7 +121,7 @@
         </div>
 
         <!-- Items Section -->
-        <div class="section">
+        <div class="item_section section">
             <table class="items-table">
                 <thead>
                     <tr>
@@ -152,15 +140,14 @@
             </table>
         </div>
 
-        <!-- Totals Section -->
-        <div class="totals">
-            <strong>Součet položek:</strong> <span class="editable-field" data-field="totals.item_total"></span> Kč<br>
-            <strong>DPH:</strong> <span class="editable-field" data-field="totals.tax_total"></span> Kč<br>
-            <strong>CELKEM K ÚHRADĚ:</strong> <span class="editable-field" data-field="totals.total_due"></span> Kč
-        </div>
-
         <!-- Footer Section -->
         <div class="footer">
+            <!-- Totals Section -->
+            <div class="totals">
+                <strong>Součet položek:</strong> <span class="editable-field" data-field="totals.item_total"></span> Kč<br>
+                <strong>DPH:</strong> <span class="editable-field" data-field="totals.tax_total"></span> Kč<br>
+                <strong>CELKEM K ÚHRADĚ:</strong> <span class="editable-field" data-field="totals.total_due"></span> Kč
+            </div>
             <div class="info">
                 Vystavil: <span class="editable-field" data-field="issuer"></span><br>
             </div>
