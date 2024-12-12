@@ -316,12 +316,105 @@
       "issuer": "",
       "template_id": "1",
       "name": "00145"
+    },
+    {
+      "id": "bbc9",
+      "supplier": {
+        "name": "wefewf",
+        "address": "wef",
+        "country": "wef",
+        "ico": "",
+        "dic": "",
+        "phone": "",
+        "email": ""
+      },
+      "customer": {
+        "name": "",
+        "contact_person": "",
+        "address": "",
+        "country": "",
+        "ico": "",
+        "dic": ""
+      },
+      "invoice": {
+        "number": "",
+        "issue_date": "",
+        "due_date": "",
+        "payment_method": "",
+        "variable_symbol": ""
+      },
+      "items": [
+        {
+          "description": "",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        }
+      ],
+      "totals": {
+        "item_total": "",
+        "tax_total": "",
+        "total_due": ""
+      },
+      "issuer": "",
+      "name": "wefwef",
+      "template_id": "2"
     }
   ],
   "templates": [
     {
       "id": "1",
       "name": "Zálohová šablona",
+      "fields": {
+        "supplier": {
+          "name": "",
+          "address": "",
+          "country": "",
+          "ico": "",
+          "dic": "",
+          "phone": "",
+          "email": ""
+        },
+        "customer": {
+          "name": "",
+          "contact_person": "",
+          "address": "",
+          "country": "",
+          "ico": "",
+          "dic": ""
+        },
+        "invoice": {
+          "number": "",
+          "issue_date": "",
+          "due_date": "",
+          "payment_method": "",
+          "variable_symbol": ""
+        },
+        "items": [
+          {
+            "description": "",
+            "quantity": "",
+            "unit_price": "",
+            "price": "",
+            "tax_rate": "",
+            "tax": "",
+            "total": ""
+          }
+        ],
+        "totals": {
+          "item_total": "",
+          "tax_total": "",
+          "total_due": ""
+        },
+        "issuer": ""
+      }
+    },
+    {
+      "id": "2",
+      "name": "Příjmová šablona",
       "fields": {
         "supplier": {
           "name": "",
