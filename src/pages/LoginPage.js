@@ -14,9 +14,9 @@ const LoginPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         
+            navigate('/dashboard');
         try {
             await AuthService.loginUser(username, password);
-            navigate('/');
         } catch (error) {
             console.error('Failed to log in:', error);
             setError('Nesprávné přihlašovací údaje. Zkuste to znovu.');

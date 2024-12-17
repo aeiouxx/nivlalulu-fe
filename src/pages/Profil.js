@@ -117,7 +117,7 @@ const ProfilePage = () => {
                     variant="contained"
                     color="secondary"
                     startIcon={<ExitToApp />}
-                    onClick={() => { navigate('/') }}
+                    onClick={() => { navigate('/dashboard') }}
                 >
                     Zavřít
                 </Button>

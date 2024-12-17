@@ -33,7 +33,7 @@ const InvoiceViewer = () => {
 
     const handleDelete = async () => {
         await InvoiceService.deleteInvoice(id);
-        navigate('/');
+        navigate('/dashboard');
     };
 
     const handleExportToPDF = () => {
@@ -53,7 +53,7 @@ const InvoiceViewer = () => {
         <Container maxWidth="lg">
             <Typography variant="h4" sx={{ mt: 4 }}>Zobrazení faktury</Typography>
             <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Button variant="contained" color="secondary" startIcon={<ExitToApp />} onClick={() => navigate('/')}>
+                <Button variant="contained" color="secondary" startIcon={<ExitToApp />} onClick={() => navigate('/dashboard')}>
                     Zavřít
                 </Button>
                 <Button variant="contained" color="secondary" startIcon={<Delete />} onClick={handleDelete}>

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Typography, Button, Grid, Paper, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Container, Typography, Button, Grid, Paper, Box, Stack} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
 import AuthService from '../services/authService';
 import InvoiceService from '../services/invoiceService';
 import TemplateService from '../services/templateService';
+import InvoiceList from "../components/InvoiceList";
 
 const Dashboard = () => {
     const [invoices, setInvoices] = useState([]); // Stav pro seznam faktur
@@ -33,87 +34,22 @@ const Dashboard = () => {
         loadTemplates();
     }, []);
 
-    const handleLogout = () => {
-        AuthService.logoutUser(); // Odhlášení uživatele pomocí MockAuthService
-        navigate('/login');
-    };
-
-    const handleProfile = () => {
-        navigate('/profil');
-    };
-
-    const handleOpenTemplate = (templateId) => {
-        navigate(`/template/${templateId}`); // Přesměrování na editor šablon
-    };
-
     return (
-        <Container maxWidth="lg">
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4 }}>
-                <Typography variant="h4">Vítejte na hlavní stránce!</Typography>
-                <Box 
-                display="flex"
-                flexDirection={{ xs: 'column', sm: 'row' }} // Mobilní: sloupec, větší obrazovky: řádek
-                gap={2} // Mezera mezi boxy
-                >
-                    <Button variant="outlined" color="primary" onClick={handleProfile} sx={{ mr: 2 }}>
-                        Profil
-                    </Button>
-                    <Button variant="contained" color="secondary" onClick={handleLogout}>
-                        Odhlásit se
-                    </Button>
+        <Stack pt={4} spacing={6}>
+
+            <Stack spacing={1}>
+                <Typography variant="h4" fontWeight={"bold"}>{`Vítej zpět ${"Lukáš"}!`}</Typography>
+                <Box maxWidth={500}>
+                    <Typography color={"gray"}>
+                        {`Rádi tě zase vidíme. Zkontroluj nejnovější faktury nebo si připrav novou šablonu pro své fakturace.`}
+                    </Typography>
                 </Box>
-            </Box>
+            </Stack>
 
-            <Grid container spacing={4} sx={{ mt: 4 }}>
-                {/* Dynamický seznam šablon */}
-                <Grid item xs={12} md={6}>
-                    <Paper sx={{ p: 2 }}>
-                        <Typography variant="h6">Dostupné šablony faktur</Typography>
-                        <Box sx={{ mt: 2 }}>
-                            {templates.length > 0 ? (
-                                templates.map((template) => (
-                                <Button
-                                    key={template.id}
-                                    variant="outlined"
-                                    fullWidth
-                                    sx={{ mb: 1 }}
-                                    onClick={() => handleOpenTemplate(template.id)}
-                                >
-                                    {template.name || `Šablona ${template.id}`}
-                                </Button>
-                                ))
-                            ) : (
-                                <Typography>Žádné šablony k dispozici.</Typography>
-                            )}
-                        </Box>
-                    </Paper>
-                </Grid>
+            <InvoiceList label={"Šablony Faktur"} data={templates} navigateTo={"template"}/>
+            <InvoiceList label={"Tvé Faktury"} data={invoices} navigateTo={"invoice"}/>
 
-                {/* Dynamický seznam vytvořených faktur */}
-                <Grid item xs={12} md={6}>
-                    <Paper sx={{ p: 2 }}>
-                        <Typography variant="h6">Vytvořené faktury</Typography>
-                        <Box sx={{ mt: 2 }}>
-                            {invoices.length > 0 ? (
-                                invoices.map((invoice) => (
-                                    <Button
-                                        key={invoice.id}
-                                        variant="outlined"
-                                        fullWidth
-                                        sx={{ mb: 1 }}
-                                        onClick={() => navigate(`/invoice/${invoice.id}`)}
-                                    >
-                                        {invoice.name || `Faktura ${invoice.id}`}
-                                    </Button>
-                                ))
-                            ) : (
-                                <Typography>Žádné faktury k dispozici.</Typography>
-                            )}
-                        </Box>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Container>
+        </Stack>
     );
 };
 
