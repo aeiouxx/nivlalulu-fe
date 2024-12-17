@@ -85,7 +85,7 @@ const InvoiceEditor = () => {
     const handleSaveInvoice = async () => {
         try {
             await InvoiceService.updateInvoice(id, { ...jsonData, name: invoiceName });
-            navigate('/');
+            navigate('/dashboard');
         } catch (error) {
             console.error('Chyba při ukládání faktury:', error);
         }

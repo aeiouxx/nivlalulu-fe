@@ -73,14 +73,14 @@ const TemplateEditor = () => {
 
     const handleSaveInvoice = async () => {
         await InvoiceService.addInvoice({ ...jsonData, name: invoiceName, template_id: id });
-        navigate('/');
+        navigate('/dashboard');
     };
 
     return (
         <Container maxWidth="lg">
             <Typography variant="h4" sx={{ mt: 4 }}>Editovatelná šablona</Typography>
             <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Button variant="contained" color="secondary" startIcon={<ExitToApp />} onClick={() => navigate('/')}>
+                <Button variant="contained" color="secondary" startIcon={<ExitToApp />} onClick={() => navigate('/dashboard')}>
                     Zavřít
                 </Button>
                 <Button variant="contained" color="secondary" startIcon={<Save />} onClick={handleSaveInvoice}>

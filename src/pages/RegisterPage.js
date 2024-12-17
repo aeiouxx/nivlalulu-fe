@@ -31,7 +31,7 @@ const RegisterPage = () => {
 
         try {
             await AuthService.registerUser(username, password, email);
-            navigate('/'); // Přesměrování na hlavní stránku po úspěšné registraci
+            navigate('/dashboard'); // Přesměrování na hlavní stránku po úspěšné registraci
         } catch (error) {
             console.error('Failed to register:', error);
             setError('Registrace se nezdařila. Zkuste to znovu.');
