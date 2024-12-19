@@ -1,0 +1,36 @@
+name: Update superproject
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  bump-commit:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # TODO, build + test + reports, need to know how and what we're building and testing and reporting...
+
+      - name: Bump superproject commits
+        if: github.ref == 'refs/heads/master' # here if we run this CI for PRs in the future
+        run: |
+          mkdir superproject
+          cd superproject
+          git clone https://x-access-token:${{ secrets.BUMP_TOKEN }}@github.com/aeiouxx/nivlalulu .
+          ls -lha
+          git submodule update --init --remote frontend
+          cd frontend
+          git checkout $GITHUB_SHA
+          cd ..
+          git add frontend
+          git commit -m "Update commit version [skip ci]"
+          git push origin master
