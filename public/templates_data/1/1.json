@@ -4,7 +4,7 @@
   "fields": {
     "items": [
       {
-        "name": " ",
+        "name": "",
         "quantity": 0,
         "unitPrice": 0,
         "taxPrice": 0,
@@ -13,22 +13,22 @@
     ],
     "paymentMethod": "P",
     "customer": {
-      "name": " ",
-      "address": " ",
-      "country": " ",
+      "name": "",
+      "address": "",
+      "country": "",
       "icTax": null,
       "dicTax": null,
-      "telephone": " ",
-      "email": " "
+      "telephone": "",
+      "email": ""
     },
     "supplier": {
-      "name": " ",
-      "address": " ",
-      "country": " ",
+      "name": "",
+      "address": "",
+      "country": "",
       "icTax": null,
       "dicTax": null,
-      "telephone": " ",
-      "email": " "
+      "telephone": "",
+      "email": ""
     },
     "created_at": null,
     "expires_at": null,
@@ -36,6 +36,6 @@
     "raw_value": 0,
     "tax_value": 0,
     "total_value": 0,
-    "contact": " "
+    "contact": ""
   }
 }

@@ -1,5 +1,5 @@
-import {createApi} from "@reduxjs/toolkit/query/react";
-import {customBaseQuery} from "./settings";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { customBaseQuery } from "./settings";
 
 export const invoicesApi = createApi({
     reducerPath: "invoices",
@@ -14,7 +14,7 @@ export const invoicesApi = createApi({
             query: (id) => ({
                 url: `/invoices/${id}`,
             }),
-            providesTags: (result, error, id) => [{type: 'Invoice', id}], // Propojení se specifickou fakturou
+            providesTags: (result, error, id) => [{ type: 'Invoice', id }], // Propojení se specifickou fakturou
         }),
         createInvoice: builder.mutation({
             query: (fieldsObj) => ({
@@ -29,7 +29,15 @@ export const invoicesApi = createApi({
                 url: `/invoices/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Invoices', {type: 'Invoice', id: id}], // Invaliduje seznam i specifickou fakturu
+            invalidatesTags: (result, error, id) => ['Invoices', { type: 'Invoice', id }], // Invaliduje seznam i specifickou fakturu
+        }),
+        updateInvoice: builder.mutation({
+            query: ({ id, fieldsObj }) => ({
+                url: `/invoices/${id}`,
+                method: "PUT",
+                body: fieldsObj,
+            }),
+            invalidatesTags: (result, error, { id }) => [{ type: 'Invoice', id }], // Invaliduje cache specifické faktury
         }),
     }),
 });
@@ -39,4 +47,5 @@ export const {
     useGetInvoiceByIdQuery, // Export pro specifickou fakturu
     useCreateInvoiceMutation,
     useDeleteInvoiceMutation,
+    useUpdateInvoiceMutation, // Export pro úpravu faktury
 } = invoicesApi;

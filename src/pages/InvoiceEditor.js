@@ -1,104 +1,108 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Button, TextField, Box } from '@mui/material';
-import { Save, ExitToApp } from '@mui/icons-material';
+import React, {useEffect, useState} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {Container, Typography, Button, TextField, Box} from '@mui/material';
+import {Save, ExitToApp} from '@mui/icons-material';
 import TemplateRenderer from '../components/TemplateRenderer';
 import InvoiceService from '../services/invoiceService';
 import TemplateService from '../services/templateService';
+import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
+import {useGetInvoiceByIdQuery, useUpdateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 
 const InvoiceEditor = () => {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const {id} = useParams();
     const [invoiceName, setInvoiceName] = useState('');
     const [jsonData, setJsonData] = useState(null);
     const [htmlTemplate, setHtmlTemplate] = useState('');
     const [itemTemplate, setItemTemplate] = useState({});
+    const [updateInvoice] = useUpdateInvoiceMutation();
+    const {data: invoice, isLoading: invoiceIsLoading, error: invoiceLoadingError} = useGetInvoiceByIdQuery(id);
+
+    const {
+        htmlTemplate: htmlLoadedTemplate,
+        loading: htmlTemplateLoading,
+        error: htmlTemplateLoadingError
+    } = useLoadHtmlTemplate({id: 1});
 
     useEffect(() => {
-        const loadInvoiceData = async () => {
-            try {
-                const invoiceData = await InvoiceService.getInvoiceById(id);
-                const templateData = await TemplateService.loadHTMLTemplate(invoiceData.template_id);
-                var itemsData = {}
-                Object.keys(invoiceData.items[0]).forEach(key => {
-                    itemsData[key] = '';
-                });
-                setItemTemplate(itemsData || {});
-                setInvoiceName(invoiceData.invoice?.number || '');
-                setJsonData(invoiceData);
-                setHtmlTemplate(templateData);
-            } catch (error) {
-                console.error('Chyba při načítání faktury:', error);
-            }
-        };
+        if (htmlLoadedTemplate) {
+            setHtmlTemplate(htmlLoadedTemplate);
+        }
+    }, [htmlTemplateLoading])
 
-        loadInvoiceData();
-    }, [id]);
+    useEffect(() => {
+        if (invoice) {
+            setItemTemplate(invoice.items[0]);
+            setJsonData(invoice)
+        }
+    }, [invoiceIsLoading]);
 
-    // Funkce pro změnu hodnoty pole
+
     const handleFieldChange = (path, value) => {
         setJsonData((prevData) => {
-            const newData = { ...prevData };
+            const newData = JSON.parse(JSON.stringify(prevData)); // Hluboká kopie
             const keys = path.split('.');
             let current = newData;
-            keys.forEach((key, index) => {
-                if (index === keys.length - 1) {
-                    current[key] = value;
-                } else {
-                    current = current[key];
-                }
-            });
+
+            try {
+                keys.forEach((key, index) => {
+                    if (index === keys.length - 1) {
+                        current[key] = value; // Nastavení nové hodnoty
+                    } else {
+                        if (!current[key]) current[key] = {}; // Inicializace prázdného objektu
+                        current = current[key];
+                    }
+                });
+            } catch (error) {
+                console.error('Chyba při změně pole:', error);
+            }
+
             return newData;
         });
     };
 
-    // Funkce pro přidání nové položky
-    const handleAddItem = (path) => {
-        setJsonData((prevData) => {
-            const newData = { ...prevData };
-            const keys = path.split('.');
-            let current = newData;
-            keys.forEach((key) => {
-                if (!current[key]) current[key] = [];
-                current = current[key];
-            });
-            current.push({ ...itemTemplate });
-            return newData;
-        });
-    };
+    const handleUpdateInvoice = async () => {
+        console.log(jsonData)
+        try{
 
-    // Funkce pro odstranění položky
-    const handleRemoveItem = (path, index) => {
-        setJsonData((prevData) => {
-            const newData = { ...prevData };
-            const keys = path.split('.');
-            let current = newData;
-            keys.forEach((key) => {
-                current = current[key];
-            });
-            current.splice(index, 1);
-            return newData;
-        });
-    };
+        const result = await updateInvoice({id: id, fieldsObj: jsonData}).unwrap();
 
-    // Funkce pro uložení faktury
-    const handleSaveInvoice = async () => {
-        try {
-            await InvoiceService.updateInvoice(id, { ...jsonData, name: invoiceName });
-            navigate('/dashboard');
-        } catch (error) {
-            console.error('Chyba při ukládání faktury:', error);
+        if (result.error) {
+            console.error('Chyba při ukládání faktury:', result.error);
+            const errorMessages = result.error.data;
+            alert("Fakturu se nepodařilo uložit, oprav chyby:\n\n" + Object.values(errorMessages).join("\n"));
+            return
         }
+
+        }catch(e){
+            console.error('Chyba při ukládání faktury:', e.message);
+        }
+
+        alert("Faktura úspěšně uložena")
+        navigate('/dashboard');
+
+
     };
+
+
+    if (invoiceIsLoading) return <p>Loading invoice...</p>;
+    if (invoiceLoadingError) return <p>Error fetching invoice: {invoiceLoadingError.message}</p>;
+
+    if (htmlTemplateLoading) return <p>Loading templates...</p>;
+    if (htmlTemplateLoadingError) return <p>Error fetching templates: {htmlTemplateLoadingError.message}</p>;
+
+    console.log(jsonData)
 
     return (
         <Container maxWidth="lg">
+            {JSON.stringify(jsonData)}
+
             <Typography variant="h4">Editace faktury</Typography>
-            <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Button variant="contained" color="secondary" startIcon={<ExitToApp />} onClick={() => navigate(-1)}>
+            <Box sx={{mt: 2, display: 'flex', gap: 2}}>
+                <Button variant="contained" color="secondary" startIcon={<ExitToApp/>} onClick={() => navigate("/dashboard")}>
                     Zpět
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleSaveInvoice} startIcon={<Save />}>
+                <Button variant="contained" color="primary" onClick={handleUpdateInvoice} startIcon={<Save/>}>
                     Ulož fakturu
                 </Button>
             </Box>
@@ -108,14 +112,6 @@ const InvoiceEditor = () => {
                 onChange={(e) => setInvoiceName(e.target.value)}
                 fullWidth
                 margin="normal"
-            />
-            <TemplateRenderer
-                htmlTemplate={htmlTemplate}
-                jsonData={jsonData}
-                editable={true}
-                onFieldChange={handleFieldChange}
-                onUpdateData={setJsonData}
-                itemTemplate={itemTemplate}
             />
             {htmlTemplate && jsonData ? (
                 <TemplateRenderer

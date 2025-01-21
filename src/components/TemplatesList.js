@@ -12,7 +12,8 @@ export default function TemplatesList() {
     return (
         <Grid2 container spacing={2} direction={"row"}>
             {jsonTemplate.length === 0 && <Typography>Žádné šablony k dispozici.</Typography>}
-            {jsonTemplate.length > 0 && (jsonTemplate.map((item) => (<TemplatesListItem item={item}/>)))}
+            {jsonTemplate.length > 0 && (jsonTemplate.map((item, index) => (
+                <TemplatesListItem key={index} item={item}/>)))}
         </Grid2>
     )
 }

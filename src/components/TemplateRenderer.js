@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton } from '@mui/material';
-import ReactDOM from 'react-dom';
 
 const itemsPerFirstPage = 10;
 const itemsPerSubsequentPage = 20;
@@ -25,6 +25,7 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
         const firstSection = container.querySelector('.item_section');
         if (!firstSection) return;
 
+        // Vyčistíme všechny sekce kromě první
         container.querySelectorAll('.item_section').forEach((section, index) => {
             if (index > 0) section.remove();
         });
@@ -104,13 +105,14 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
             row.appendChild(cell);
         });
 
+        // Místo ReactDOM.render nově createRoot
         if (editable) {
             const removeButtonCell = document.createElement('td');
-            ReactDOM.render(
+            const removeButtonRoot = createRoot(removeButtonCell);
+            removeButtonRoot.render(
                 <IconButton color="error" size="small" onClick={() => handleRemoveItem(path, index)}>
                     <DeleteIcon />
-                </IconButton>,
-                removeButtonCell
+                </IconButton>
             );
             row.appendChild(removeButtonCell);
         }
@@ -123,11 +125,11 @@ const TemplateRenderer = ({ htmlTemplate, jsonData, editable, onFieldChange, onU
         const addButtonCell = document.createElement('td');
         addButtonCell.colSpan = 8;
 
-        ReactDOM.render(
+        const addButtonRoot = createRoot(addButtonCell);
+        addButtonRoot.render(
             <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleAddItem(path)}>
                 Přidat položku
-            </Button>,
-            addButtonCell
+            </Button>
         );
 
         addButtonRow.appendChild(addButtonCell);
