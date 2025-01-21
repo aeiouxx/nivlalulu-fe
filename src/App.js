@@ -7,35 +7,39 @@ import Dashboard from './pages/Dashboard';
 import TemplateEditor from './pages/TemplateEditor';
 import InvoiceViewer from './pages/InvoiceViewer';
 import Profil from './pages/Profil';
-import {CssBaseline, Container} from '@mui/material';
+import {CssBaseline} from '@mui/material';
 import InvoiceEditor from "./pages/InvoiceEditor";
 import IndexPage from "./pages/IndexPage";
-import IndexLayout from "./layouts/IndexLayout";
 import AppLayout from "./layouts/AppLayout";
+import store from "./utils/redux/store";
+import {Provider} from "react-redux";
 
 function App() {
     return (
-        <Router>
-            <CssBaseline/>
-            <Routes>
-                {/* Veřejné trasy */}
-                <Route path="/login" element={<LoginPage/>}/>
-                <Route path="/register" element={<RegisterPage/>}/>
+        <Provider store={store}>
+            <Router>
+                <CssBaseline/>
+                <AppLayout>
+                    <Routes>
+                        {/* Veřejné trasy */}
+                        <Route path="/login" element={<LoginPage/>}/>
+                        <Route path="/register" element={<RegisterPage/>}/>
 
-                {/* Chráněné trasy */}
-                {/* TODO PŘIDAT  <Route element={<ProtectedRoute />}>*/}
-                <Route path="/" element={<IndexLayout><IndexPage/></IndexLayout>}/>
-                <Route path="/dashboard" element={<AppLayout><Dashboard/></AppLayout>}/>
-                <Route path="/profil" element={<AppLayout><Profil/></AppLayout>}/>
-                <Route path="/template/:id" element={<AppLayout><TemplateEditor/></AppLayout>}/>
-                <Route path="/invoice/:id" element={<AppLayout><InvoiceViewer/></AppLayout>}/>
-                <Route path="/invoice/update/:id" element={<AppLayout><InvoiceEditor/></AppLayout>}/>
+                        {/* Chráněné trasy */}
+                        {/* TODO PŘIDAT  <Route element={<ProtectedRoute />}>*/}
+                        <Route path="/" element={<IndexPage/>}/>
+                        <Route path="/dashboard" element={<Dashboard/>}/>
+                        <Route path="/profil" element={<Profil/>}/>
+                        <Route path="/template/:id" element={<TemplateEditor/>}/>
+                        <Route path="/invoice/:id" element={<InvoiceViewer/>}/>
+                        <Route path="/invoice/update/:id" element={<InvoiceEditor/>}/>
 
-
-                {/* Trvalá trasa pro neplatné cesty */}
-                <Route path="*" element={<Navigate to="/login"/>}/>
-            </Routes>
-        </Router>
+                        {/* Trvalá trasa pro neplatné cesty */}
+                        <Route path="*" element={<Navigate to="/login"/>}/>
+                    </Routes>
+                </AppLayout>
+            </Router>
+        </Provider>
     );
 }
 

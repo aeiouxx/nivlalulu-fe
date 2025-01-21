@@ -28,7 +28,7 @@ class TemplateService {
 
     async loadHTMLTemplate(id) {
         try {
-            const response = await fetch(`/templates_data/${id}.html`);
+            const response = await fetch(`/templates_data/1.html`);
             if (!response.ok) {
                 throw new Error(`Failed to load template: ${response.statusText}`);
             }

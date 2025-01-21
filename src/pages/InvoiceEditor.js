@@ -109,6 +109,14 @@ const InvoiceEditor = () => {
                 fullWidth
                 margin="normal"
             />
+            <TemplateRenderer
+                htmlTemplate={htmlTemplate}
+                jsonData={jsonData}
+                editable={true}
+                onFieldChange={handleFieldChange}
+                onUpdateData={setJsonData}
+                itemTemplate={itemTemplate}
+            />
             {htmlTemplate && jsonData ? (
                 <TemplateRenderer
                     htmlTemplate={htmlTemplate}

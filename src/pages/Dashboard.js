@@ -1,44 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Container, Typography, Button, Grid, Paper, Box, Stack} from '@mui/material';
-import {useNavigate} from 'react-router-dom';
-import AuthService from '../services/authService';
-import InvoiceService from '../services/invoiceService';
-import TemplateService from '../services/templateService';
-import InvoiceList from "../components/InvoiceList";
+import {Typography, Box, Stack} from '@mui/material';
+import TemplatesList from "../components/TemplatesList";
+import {useSelector} from "react-redux";
+import {UserInvoicesTable} from "../components/UserInvoicesTable";
 
 const Dashboard = () => {
-    const [invoices, setInvoices] = useState([]); // Stav pro seznam faktur
-    const [templates, setTemplates] = useState([]); // Stav pro seznam šablon
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const loadInvoices = async () => {
-            try {
-                const invoiceData = await InvoiceService.getAllInvoices(); // Načtení faktur
-                setInvoices(invoiceData);
-            } catch (error) {
-                console.error('Chyba při načítání faktur:', error);
-            }
-        };
-
-        const loadTemplates = async () => {
-            try {
-                const templateData = await TemplateService.getAllTemplates(); // Načtení šablon
-                setTemplates(templateData);
-            } catch (error) {
-                console.error('Chyba při načítání šablon:', error);
-            }
-        };
-
-        loadInvoices();
-        loadTemplates();
-    }, []);
+    const user = useSelector(state => state.auth);
 
     return (
         <Stack pt={4} spacing={6}>
-
-            <Stack spacing={1}>
-                <Typography variant="h4" fontWeight={"bold"}>{`Vítej zpět ${"Lukáš"}!`}</Typography>
+            <Stack spacing={2}>
+                <Typography variant="h3" fontWeight={"bold"}>{`Vítej zpět ${user.username || "error"}!`}</Typography>
                 <Box maxWidth={500}>
                     <Typography color={"gray"}>
                         {`Rádi tě zase vidíme. Zkontroluj nejnovější faktury nebo si připrav novou šablonu pro své fakturace.`}
@@ -46,9 +17,21 @@ const Dashboard = () => {
                 </Box>
             </Stack>
 
-            <InvoiceList label={"Šablony Faktur"} data={templates} navigateTo={"template"}/>
-            <InvoiceList label={"Tvé Faktury"} data={invoices} navigateTo={"invoice"}/>
+            <Stack spacing={2} variant={"h5"}>
+                <Box>
+                    <Typography variant={"h5"}>Šablony faktur</Typography>
+                    <Typography color={"gray"}>Vytvoř novou fakturu podle vzoru.</Typography>
+                </Box>
+                <TemplatesList/>
+            </Stack>
 
+            <Stack spacing={2}>
+                <Box>
+                    <Typography variant={"h5"}>Tvé Faktury</Typography>
+                    <Typography color={"gray"}>Vyber fakturu pro zobrazení náhledu.</Typography>
+                </Box>
+                <UserInvoicesTable/>
+            </Stack>
         </Stack>
     );
 };
