@@ -55,8 +55,18 @@ const TemplateEditor = () => {
         }
     }, [jsonData, jsonDataInitialized])
 
+    function sumItems(items, key) {
+        return items.reduce((total, item) => total + Number(item[key] || 0), 0);
+    }
+
+
     function updatePrices(){
-        setJsonData((prevData) => {
+        console.log(sumItems(jsonData.items, "totalPrice"))
+        setJsonData({
+            ...jsonData,
+            raw_value: sumItems(jsonData.items, "quantity"),
+            tax_value: 1,
+            total_value: sumItems(jsonData.items, "totalPrice")
 
         })
     }
@@ -82,6 +92,8 @@ const TemplateEditor = () => {
 
             return newData;
         });
+
+        updatePrices()
     };
 
     const handleSaveInvoice = async () => {
