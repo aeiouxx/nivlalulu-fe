@@ -8,6 +8,7 @@ import TemplateService from '../services/templateService';
 import html2pdf from 'html2pdf.js';
 import {useGetInvoiceByIdQuery, useGetItemsQuery} from "../utils/redux/rtk/invoicesApi";
 import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
+import {formatDateToUserInput} from "../functions/timeFunctions";
 
 const InvoiceViewer = () => {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ const InvoiceViewer = () => {
     const {
         htmlTemplate, loading: htmlTemplateLoading, error: htmlTemplateLoadingError
     } = useLoadHtmlTemplate({id: "1-edit"});
+    const [parsedInvoice, setParsedInvoice] = useState(null)
 
     const handleExportToPDF = () => {
         const element = document.querySelector('#template-container');
@@ -30,6 +32,16 @@ const InvoiceViewer = () => {
             html2pdf().set(options).from(element).save();
         }
     };
+
+    useEffect(() => {
+        if (invoice) {
+            setParsedInvoice({
+                ...invoice,
+                created_at: formatDateToUserInput(invoice?.created_at || "N/A"),
+                expires_at: formatDateToUserInput(invoice?.expires_at || "N/A")
+            })
+        }
+    }, [invoice, invoiceIsLoading])
 
     if (invoiceIsLoading) return <p>Loading invoice...</p>;
     if (invoiceLoadingError) return <p>Error fetching invoice: {invoiceLoadingError.message}</p>;
@@ -54,7 +66,7 @@ const InvoiceViewer = () => {
                 </Button>
             </Box>
             <div id="template-container">
-                <TemplateRenderer htmlTemplate={htmlTemplate} jsonData={invoice} editable={false}/>
+                <TemplateRenderer htmlTemplate={htmlTemplate} jsonData={parsedInvoice} editable={false}/>
             </div>
         </Container>
     );

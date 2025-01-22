@@ -7,11 +7,12 @@ import {
 import React, {useEffect, useState} from "react";
 import CustomTable from "./CustomTable";
 import {formatDateToUserInput} from "../functions/timeFunctions";
-import {IconButton, Stack, TextField, ToggleButton, ToggleButtonGroup} from "@mui/material";
+import {IconButton, Stack, TextField, ToggleButton, ToggleButtonGroup, useMediaQuery} from "@mui/material";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export function UserInvoicesTable() {
     const navigate = useNavigate();
+    const isSmallScreen = useMediaQuery('(max-width:960px)');
 
     const [searchValue, setSearchValue] = useState("");
     const [searchCriteria, setSearchCriteria] = React.useState('variableSymbol');
@@ -51,8 +52,8 @@ export function UserInvoicesTable() {
     const columns = [
         {field: 'created_at', headerName: 'Vytvořeno', render: (_, row) => formatDateToUserInput(row.created_at)},
         {field: 'variable_symbol', headerName: 'Variabilní symbol'},
-        {field: 'customer', headerName: 'Jméno zákazníka', render: (_,row) => row.customer?.name || "N/A"},
-        {field: 'supplier_name', headerName: 'Jméno dodavatele', render: (_,row) => row.supplier?.name || "N/A"},
+        {field: 'customer', headerName: 'Jméno zákazníka', render: (_, row) => row.customer?.name || "N/A"},
+        {field: 'supplier_name', headerName: 'Jméno dodavatele', render: (_, row) => row.supplier?.name || "N/A"},
         {field: 'total_value', headerName: 'Celková částka'},
         {
             field: "action", headerName: "", render: (_, row) => {
@@ -68,7 +69,7 @@ export function UserInvoicesTable() {
 
     return (
         <Stack spacing={1}>
-            <Stack direction={"row"} spacing={1}>
+            <Stack direction={isSmallScreen ? "column" : "row"} spacing={1}>
                 <TextField size={"small"} fullWidth label="Vyhledávání podle variabliního symbolu" value={searchValue}
                            onChange={e => setSearchValue(e.target.value)}/>
                 <ToggleButtonGroup
