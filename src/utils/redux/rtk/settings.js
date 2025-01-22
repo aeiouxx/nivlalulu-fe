@@ -2,6 +2,7 @@ import {fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 export const customBaseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:8080/api/v1/',
+    credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState()).auth.accessToken.content;
 

@@ -9,6 +9,7 @@ import {useCreateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
 import {removeEmptyKeys} from "../functions/removeEmptyKeys";
 import { v4 as uuidv4 } from 'uuid';
+import {calculateGrandTotal, calculateTotalItems, calculateTotalTax} from "../functions/calculations/functions";
 
 const TemplateEditor = () => {
     const navigate = useNavigate();
@@ -64,9 +65,9 @@ const TemplateEditor = () => {
         console.log(sumItems(jsonData.items, "totalPrice"))
         setJsonData({
             ...jsonData,
-            raw_value: sumItems(jsonData.items, "quantity"),
-            tax_value: 1,
-            total_value: sumItems(jsonData.items, "totalPrice")
+            raw_value: calculateTotalItems(jsonData.items),
+            tax_value: calculateTotalTax(jsonData.items),
+            total_value: calculateGrandTotal(jsonData.items)
 
         })
     }

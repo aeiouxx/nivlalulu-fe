@@ -2,6 +2,7 @@ import {clearUser} from "../../utils/redux/slices/authSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useLogoutMutation} from "../../utils/redux/rtk/accountApi";
+import {invoicesApi} from "../../utils/redux/rtk/invoicesApi";
 
 export function useLogout() {
     const dispatch = useDispatch();
@@ -11,6 +12,7 @@ export function useLogout() {
     async function handleLogout() {
         try {
             await logout().unwrap();
+            dispatch(invoicesApi.util.resetApiState());
             dispatch(clearUser());
             navigate('/');
             console.log("Odhlášení úspěšné");
