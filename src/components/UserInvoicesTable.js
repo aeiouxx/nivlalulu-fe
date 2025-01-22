@@ -86,8 +86,7 @@ export function UserInvoicesTable() {
                 </ToggleButtonGroup>
             </Stack>
             <CustomTable columns={columns}
-                         //data={showSearchResults ? filteredInvoices?.content : invoices?.content || []}
-                         data={invoices?.content}
+                         data={showSearchResults ? filteredInvoices?.content : invoices?.content || []}
                          onRowClick={handleRowClick}/>
         </Stack>
     )

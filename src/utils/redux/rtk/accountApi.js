@@ -29,7 +29,7 @@ export const accountApi = createApi({
 
         logout: builder.mutation({
             query: () => ({
-                url: "account",
+                url: "account/logout",
                 method: "POST",
             }),
         }),
