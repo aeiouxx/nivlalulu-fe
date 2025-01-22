@@ -14,6 +14,7 @@ import AppLayout from "./layouts/AppLayout";
 import store from "./utils/redux/store";
 import {Provider, useSelector} from "react-redux";
 import {ResetPasswordPage} from "./pages/ResetPasswordPage";
+import TimerComponent from "./components/TimerComponent";
 
 const ProtectedRoute = () => {
     const isLoggedIn = useSelector((state) => state.auth.username != null);
@@ -26,9 +27,12 @@ const ProtectedRoute = () => {
 };
 
 function App() {
+    console.log('Private Base URL:', process.env.REACT_APP_BASE_URL_PRIVATE);
+    console.log('Public Base URL:', process.env.REACT_APP_BASE_URL_PUBLIC);
     return (
         <Provider store={store}>
             <Router>
+                <TimerComponent/>
                 <CssBaseline/>
                 <AppLayout>
                     <Routes>

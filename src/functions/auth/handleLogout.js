@@ -15,7 +15,6 @@ export function useLogout() {
             dispatch(invoicesApi.util.resetApiState());
             dispatch(clearUser());
             navigate('/');
-            console.log("Odhlášení úspěšné");
         } catch (error) {
             console.error("Chyba při odhlášení:", error);
         }

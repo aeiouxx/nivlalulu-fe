@@ -1,7 +1,7 @@
 import {fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 export const customBaseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8080/api/v1/',
+    baseUrl: process.env.BASE_URL_PRIVATE,
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState()).auth.accessToken.content;
@@ -15,5 +15,5 @@ export const customBaseQuery = fetchBaseQuery({
 });
 
 export const publicBaseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8080/api/public/v1/',
+    baseUrl: process.env.BASE_URL_PUBLIC,
 });

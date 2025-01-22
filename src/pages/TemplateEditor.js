@@ -8,7 +8,7 @@ import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {useCreateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
 import {removeEmptyKeys} from "../functions/removeEmptyKeys";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {calculateGrandTotal, calculateTotalItems, calculateTotalTax} from "../functions/calculations/functions";
 
 const TemplateEditor = () => {
@@ -60,11 +60,19 @@ const TemplateEditor = () => {
         return items.reduce((total, item) => total + Number(item[key] || 0), 0);
     }
 
+    function processItems(items) {
+        return items.map(item => {
+            const itemCopy = item;
+            itemCopy.totalPrice = (Number(item.quantity) * Number(item.unitPrice)) + Number(item.taxPrice);
+            console.log(itemCopy)
+            return itemCopy
+        })
+    }
 
-    function updatePrices(){
-        console.log(sumItems(jsonData.items, "totalPrice"))
+    function updatePrices() {
         setJsonData({
             ...jsonData,
+            items: processItems(jsonData.items),
             raw_value: calculateTotalItems(jsonData.items),
             tax_value: calculateTotalTax(jsonData.items),
             total_value: calculateGrandTotal(jsonData.items)
@@ -110,7 +118,7 @@ const TemplateEditor = () => {
         if (result.error) {
             console.error('Chyba při vytváření faktury:', result.error);
 
-            if(result.error.originalStatus === 500){
+            if (result.error.originalStatus === 500) {
                 const commonErrors = [
                     {msg: "Všechna pole DODAVATEL musí být vyplněna"},
                     {msg: "Všechna pole ODBĚRATEL musí být vyplněna"},

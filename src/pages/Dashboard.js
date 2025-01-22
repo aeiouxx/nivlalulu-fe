@@ -1,11 +1,15 @@
 import {Typography, Box, Stack, TextField} from '@mui/material';
 import TemplatesList from "../components/TemplatesList";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {UserInvoicesTable} from "../components/UserInvoicesTable";
+import {setInterval, startTimer} from "../utils/redux/slices/timerSlice";
 
 const Dashboard = () => {
     const user = useSelector(state => state.auth);
+    const dispatch = useDispatch()
 
+    dispatch(setInterval(1000))
+    dispatch(startTimer())
     return (
         <Stack pt={4} spacing={6}>
             <Stack spacing={2}>
