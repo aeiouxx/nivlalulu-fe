@@ -9,6 +9,7 @@ import html2pdf from 'html2pdf.js';
 import {useGetInvoiceByIdQuery, useGetItemsQuery} from "../utils/redux/rtk/invoicesApi";
 import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {formatDateToUserInput} from "../functions/timeFunctions";
+import {updatePrices} from "../functions/calculations/functions";
 
 const InvoiceViewer = () => {
     const navigate = useNavigate();
@@ -35,13 +36,16 @@ const InvoiceViewer = () => {
 
     useEffect(() => {
         if (invoice) {
-            setParsedInvoice({
-                ...invoice,
-                created_at: formatDateToUserInput(invoice?.created_at || "N/A"),
-                expires_at: formatDateToUserInput(invoice?.expires_at || "N/A")
-            })
+            setParsedInvoice(prev => {
+                const updatedInvoice = {
+                    ...invoice,
+                    created_at: formatDateToUserInput(invoice.created_at || "N/A"),
+                    expires_at: formatDateToUserInput(invoice.expires_at || "N/A")
+                };
+                return updatePrices(updatedInvoice);
+            });
         }
-    }, [invoice, invoiceIsLoading])
+    }, [invoice, invoiceIsLoading]);
 
     if (invoiceIsLoading) return <p>Loading invoice...</p>;
     if (invoiceLoadingError) return <p>Error fetching invoice: {invoiceLoadingError.message}</p>;

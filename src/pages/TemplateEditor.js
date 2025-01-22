@@ -9,7 +9,12 @@ import {useCreateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
 import {removeEmptyKeys} from "../functions/removeEmptyKeys";
 import {v4 as uuidv4} from 'uuid';
-import {calculateGrandTotal, calculateTotalItems, calculateTotalTax} from "../functions/calculations/functions";
+import {
+    calculateGrandTotal,
+    calculateTotalItems,
+    calculateTotalTax,
+    updatePrices
+} from "../functions/calculations/functions";
 
 const TemplateEditor = () => {
     const navigate = useNavigate();
@@ -56,33 +61,9 @@ const TemplateEditor = () => {
         }
     }, [jsonData, jsonDataInitialized])
 
-    function sumItems(items, key) {
-        return items.reduce((total, item) => total + Number(item[key] || 0), 0);
-    }
-
-    function processItems(items) {
-        return items.map(item => {
-            const itemCopy = item;
-            itemCopy.totalPrice = (Number(item.quantity) * Number(item.unitPrice)) + Number(item.taxPrice);
-            console.log(itemCopy)
-            return itemCopy
-        })
-    }
-
-    function updatePrices() {
-        setJsonData({
-            ...jsonData,
-            items: processItems(jsonData.items),
-            raw_value: calculateTotalItems(jsonData.items),
-            tax_value: calculateTotalTax(jsonData.items),
-            total_value: calculateGrandTotal(jsonData.items)
-
-        })
-    }
-
     const handleFieldChange = (path, value) => {
         setJsonData((prevData) => {
-            const newData = {...prevData};
+            const newData = { ...prevData };
             const keys = path.split('.');
             let current = newData;
 
@@ -99,10 +80,8 @@ const TemplateEditor = () => {
                 console.error('Chyba při změně pole:', error);
             }
 
-            return newData;
+            return updatePrices(newData);
         });
-
-        updatePrices()
     };
 
     const handleSaveInvoice = async () => {
