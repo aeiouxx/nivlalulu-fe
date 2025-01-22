@@ -16,13 +16,13 @@ import {Provider, useSelector} from "react-redux";
 import {ResetPasswordPage} from "./pages/ResetPasswordPage";
 
 const ProtectedRoute = () => {
-    const isLoggedIn = useSelector((state) => state.auth.accessToken != null);
+    const isLoggedIn = useSelector((state) => state.auth.username != null);
 
     if (!isLoggedIn) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/" replace/>;
     }
 
-    return <Outlet />;
+    return <Outlet/>;
 };
 
 function App() {

@@ -16,6 +16,7 @@ const LoginPage = () => {
         event.preventDefault();
         try {
             const response = await login(credentials).unwrap();
+            console.log(response)
             dispatch(setUser(response));
             navigate('/dashboard');
         } catch (err) {

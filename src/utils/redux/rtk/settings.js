@@ -3,7 +3,7 @@ import {fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 export const customBaseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:8080/api/v1/',
     prepareHeaders: (headers, { getState }) => {
-        const token = (getState()).auth.accessToken;
+        const token = (getState()).auth.accessToken.content;
 
         if (token) {
             headers.set('Authorization', `Bearer ${token}`);

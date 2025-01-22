@@ -4,6 +4,7 @@ import {setupListeners} from "@reduxjs/toolkit/query";
 import {invoicesApi} from "./rtk/invoicesApi";
 import {accountApi} from "./rtk/accountApi";
 import {authApi} from "./rtk/publicApi";
+import {logger} from "redux-logger/src";
 
 const store = configureStore({
     reducer: {
@@ -14,7 +15,7 @@ const store = configureStore({
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(invoicesApi.middleware).concat(accountApi.middleware).concat(authApi.middleware)
-    //.concat(logger),
+    .concat(logger),
 });
 
 setupListeners(store.dispatch);
