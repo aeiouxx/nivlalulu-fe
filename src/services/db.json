@@ -1,0 +1,533 @@
+{
+  "invoices": [
+    {
+      "id": "1",
+      "name": "2198000010",
+      "template_id": "1",
+      "supplier": {
+        "name": "Novák s.r.o.",
+        "address": "Horní 15, 586 01 Jihlava 1",
+        "country": "Česká republika",
+        "ico": "68886688",
+        "dic": "CZ1212121218",
+        "phone": "569 876 533",
+        "email": "info@novak.cz"
+      },
+      "customer": {
+        "name": "ZET s.r.o.",
+        "contact_person": "Ondřej Mařík",
+        "address": "Komenského 78, 130 00 Praha 3",
+        "country": "Česká republika",
+        "ico": "56541223",
+        "dic": "CZ56541223"
+      },
+      "invoice": {
+        "number": "2198000010",
+        "issue_date": "15.11.2021",
+        "due_date": "29.11.2021",
+        "payment_method": "Převodem",
+        "variable_symbol": "2198000010"
+      },
+      "items": [
+        {
+          "description": "Křeslo - čalouněné",
+          "quantity": "1 ks",
+          "unit_price": "2500,00",
+          "price": "2500,00",
+          "tax_rate": "21%",
+          "tax": "525,00",
+          "total": "3025,00"
+        },
+        {
+          "description": "Pohovka rozkládací",
+          "quantity": "1 ks",
+          "unit_price": "25300,00",
+          "price": "25300,00",
+          "tax_rate": "21%",
+          "tax": "5313,00",
+          "total": "30613,00"
+        },
+        {
+          "description": "Konferenční stolek chrom",
+          "quantity": "1 ks",
+          "unit_price": "7065,60",
+          "price": "7065,60",
+          "tax_rate": "21%",
+          "tax": "1483,78",
+          "total": "8549,38"
+        },
+        {
+          "description": "wefwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwefwqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwefwqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwefwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wefwqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqefwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wefqwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "wqef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        },
+        {
+          "description": "qwef",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        }
+      ],
+      "totals": {
+        "item_total": "34865,60",
+        "tax_total": "7321,78",
+        "total_due": "42187,38"
+      },
+      "issuer": "Jana Novákováková"
+    },
+    {
+      "id": "35ba",
+      "supplier": {
+        "name": "Test",
+        "address": "jhbwed",
+        "country": "eve",
+        "ico": "erb",
+        "dic": "erv",
+        "phone": "erv",
+        "email": "erv"
+      },
+      "customer": {
+        "name": "erv",
+        "contact_person": "erv",
+        "address": "evropské",
+        "country": "erb",
+        "ico": "erv",
+        "dic": "erv"
+      },
+      "invoice": {
+        "number": "00145",
+        "issue_date": "erv",
+        "due_date": "erv",
+        "payment_method": "erv",
+        "variable_symbol": "erv"
+      },
+      "items": [
+        {
+          "description": "erv",
+          "quantity": "evropské",
+          "unit_price": "erb",
+          "price": "evropské",
+          "tax_rate": "erb",
+          "tax": "erv",
+          "total": "erv"
+        }
+      ],
+      "totals": {
+        "item_total": "rev",
+        "tax_total": "erv",
+        "total_due": "erv"
+      },
+      "issuer": "",
+      "template_id": "1",
+      "name": "00145"
+    },
+    {
+      "id": "bbc9",
+      "supplier": {
+        "name": "wefewf",
+        "address": "wef",
+        "country": "wef",
+        "ico": "",
+        "dic": "",
+        "phone": "",
+        "email": ""
+      },
+      "customer": {
+        "name": "",
+        "contact_person": "",
+        "address": "",
+        "country": "",
+        "ico": "",
+        "dic": ""
+      },
+      "invoice": {
+        "number": "",
+        "issue_date": "",
+        "due_date": "",
+        "payment_method": "",
+        "variable_symbol": ""
+      },
+      "items": [
+        {
+          "description": "",
+          "quantity": "",
+          "unit_price": "",
+          "price": "",
+          "tax_rate": "",
+          "tax": "",
+          "total": ""
+        }
+      ],
+      "totals": {
+        "item_total": "",
+        "tax_total": "",
+        "total_due": ""
+      },
+      "issuer": "",
+      "name": "wefwef",
+      "template_id": "2"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    },
+    {
+      "id": "2",
+      "name": "2198000010"
+    }
+  ],
+  "templates": [
+    {
+      "id": "1",
+      "name": "Zálohová šablona",
+      "fields": {
+        "supplier": {
+          "name": "",
+          "address": "",
+          "country": "",
+          "ico": "",
+          "dic": "",
+          "phone": "",
+          "email": ""
+        },
+        "customer": {
+          "name": "",
+          "contact_person": "",
+          "address": "",
+          "country": "",
+          "ico": "",
+          "dic": ""
+        },
+        "invoice": {
+          "number": "",
+          "issue_date": "",
+          "due_date": "",
+          "payment_method": "",
+          "variable_symbol": ""
+        },
+        "items": [
+          {
+            "description": "",
+            "quantity": "",
+            "unit_price": "",
+            "price": "",
+            "tax_rate": "",
+            "tax": "",
+            "total": ""
+          }
+        ],
+        "totals": {
+          "item_total": "",
+          "tax_total": "",
+          "total_due": ""
+        },
+        "issuer": ""
+      }
+    },
+    {
+      "id": "2",
+      "name": "Příjmová šablona",
+      "fields": {
+        "supplier": {
+          "name": "",
+          "address": "",
+          "country": "",
+          "ico": "",
+          "dic": "",
+          "phone": "",
+          "email": ""
+        },
+        "customer": {
+          "name": "",
+          "contact_person": "",
+          "address": "",
+          "country": "",
+          "ico": "",
+          "dic": ""
+        },
+        "invoice": {
+          "number": "",
+          "issue_date": "",
+          "due_date": "",
+          "payment_method": "",
+          "variable_symbol": ""
+        },
+        "items": [
+          {
+            "description": "",
+            "quantity": "",
+            "unit_price": "",
+            "price": "",
+            "tax_rate": "",
+            "tax": "",
+            "total": ""
+          }
+        ],
+        "totals": {
+          "item_total": "",
+          "tax_total": "",
+          "total_due": ""
+        },
+        "issuer": ""
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "admin",
+      "email": "test@test.cz",
+      "token": "mock-token-1634567890000"
+    },
+    {
+      "id": "0bd4",
+      "username": "test",
+      "password": "test",
+      "email": "lucka.scholz@gmail.com",
+      "token": "rW4qtEGy6BCqEYHwkKfA"
+    },
+    {
+      "id": "6785",
+      "username": "lukas",
+      "password": "heslo",
+      "email": "lukas@test.cz",
+      "token": "8kmhyQvbMaAiVzk4jjlN"
+    },
+    {
+      "id": "1f38",
+      "username": "levinestark",
+      "password": "Marvel12",
+      "email": "lucka.scholz@gmail.com",
+      "token": "qu4MHJjSUxEfIDA58vep"
+    }
+  ]
+}

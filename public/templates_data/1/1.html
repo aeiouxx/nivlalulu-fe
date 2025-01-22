@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zálohová faktura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #000;
+        }
+        .invoice-container {
+            width: 100%;
+            margin: auto;
+            box-sizing: border-box;
+        }
+        .header, .section, .footer {
+            width: 100%;
+            margin-bottom: 5px;
+            border: 1px solid #000;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .header div, .footer div {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .header .supplier, .header .customer {
+            width: 40%;
+        }
+        .header .title {
+            width: 20%;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .section th, .section td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .totals {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .footer {
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .footer .info, .footer .qr {
+            width: 50%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        /* Styl pro editovatelná pole */
+        .editable-field {
+            display: inline-block;
+            min-width: 100px; /* Minimální šířka pole */
+            padding: 2px 5px;
+            border-bottom: 1px dotted #000; /* Dolní ohraničení pole */
+            text-align: left;
+        }
+
+        /* Přizpůsobení položek faktury */
+        .items-table td[data-field], .items-table td[data-item] {
+            min-width: 80px; /* Nastavení minimální šířky pro buňky položek */
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="invoice-container">
+    <div class="title">
+        <h1>ZÁLOHOVÁ FAKTURA</h1>
+        č. <span class="editable-field" data-field="id"></span>
+    </div>
+
+    <!-- Header Section -->
+    <div class="header">
+        <div class="supplier">
+            <strong>Dodavatel:</strong><br>
+            Jméno: <div class="editable-field" data-field="supplier.name"></div><br>
+            Adresa: <div class="editable-field" data-field="supplier.address"></div><br>
+            Stát: <div class="editable-field" data-field="supplier.country"></div><br>
+            IČ: <span class="editable-field" data-field="supplier.icTax"></span><br>
+            DIČ: <span class="editable-field" data-field="supplier.dicTax"></span><br>
+            Telefon: <span class="editable-field" data-field="supplier.telephone"></span><br>
+            E-mail: <span class="editable-field" data-field="supplier.email"></span><br>
+        </div>
+        <div class="customer">
+            <strong>Odběratel:</strong><br>
+            Jméno: <div class="editable-field" data-field="customer.name"></div><br>
+            Adresa: <div class="editable-field" data-field="customer.address"></div><br>
+            Stát: <div class="editable-field" data-field="customer.country"></div><br>
+            IČ: <span class="editable-field" data-field="customer.icTax"></span><br>
+            DIČ: <span class="editable-field" data-field="customer.dicTax"></span><br>
+            Telefon: <span class="editable-field" data-field="customer.telephone"></span><br>
+            E-mail: <span class="editable-field" data-field="customer.email"></span><br>
+        </div>
+    </div>
+
+    <!-- Payment and Date Section -->
+    <div class="section">
+        <table>
+            <tr>
+                <td><strong>Datum vytvoření:</strong><br> <span class="editable-field" data-field="created_at"></span></td>
+                <td><strong>Datum splatnosti:</strong><br> <span class="editable-field" data-field="expires_at"></span></td>
+                <td><strong>Forma úhrady:</strong><br> <span class="editable-field" data-field="paymentMethod"></span></td>
+                <td><strong>Variabilní symbol:</strong><br> <span class="editable-field" data-field="variable_symbol"></span></td>
+                <td><strong>Kontakt:</strong><br> <span class="editable-field" data-field="contact"></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Items Section -->
+    <div class="item_section section">
+        <table class="items-table">
+            <thead>
+            <tr>
+                <th>Název</th>
+                <th>Množství</th>
+                <th>Jednotková cena</th>
+                <th>Daň</th>
+                <th>Celková cena</th>
+            </tr>
+            </thead>
+            <tbody data-item="items">
+            <!-- Dynamicky generované řádky podle JSON dat -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <div class="totals">
+            <strong>Součet položek:</strong> <span class="editable-field" data-field="raw_value"></span> Kč<br>
+            <strong>DPH:</strong> <span class="editable-field" data-field="tax_value"></span> Kč<br>
+            <strong>CELKEM K ÚHRADĚ:</strong> <span class="editable-field" data-field="total_value"></span> Kč
+        </div>
+    </div>
+</div>
+</body>
+</html>
