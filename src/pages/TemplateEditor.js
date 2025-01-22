@@ -7,6 +7,7 @@ import {useLoadJsonTemplate} from "../functions/useLoadJsonTemplate";
 import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {useCreateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
+import {removeEmptyKeys} from "../functions/removeEmptyKeys";
 
 const TemplateEditor = () => {
     const navigate = useNavigate();
@@ -80,21 +81,34 @@ const TemplateEditor = () => {
     const handleSaveInvoice = async () => {
         const parsedData = {
             ...jsonData,
-            created_at: parseUserInputToDate(jsonData.created_at),
-            expires_at: parseUserInputToDate(jsonData.expires_at)
+            created_at: parseUserInputToDate(jsonData.created_at)?.toISOString() || "",
+            expires_at: parseUserInputToDate(jsonData.expires_at)?.toISOString() || ""
         };
 
-        const result = await createInvoice(parsedData);
+
+        const result = await createInvoice(removeEmptyKeys(parsedData));
 
         if (result.error) {
             console.error('Chyba při vytváření faktury:', result.error);
+
+            if(result.error.originalStatus === 500){
+                const commonErrors = [
+                    {msg: "Všechna pole DODAVATEL musí být vyplněna"},
+                    {msg: "Všechna pole ODBĚRATEL musí být vyplněna"},
+                ]
+                alert("Fakturu se nepodařilo vytvořit, oprav chyby: \n\n" + commonErrors.map(err => err.msg).join("\n"))
+                return
+            }
+
             const errorMessages = result.error.data;
-            alert("Fakturu se nepodařilo uložit, oprav chyby:\n\n" + Object.values(errorMessages).join("\n"));
+            alert("Fakturu se nepodařilo vytvořit, oprav chyby:\n\n" + Object.values(errorMessages).join("\n"));
             return
         }
         console.log('Faktura vytvořena:', result);
         alert("Faktura úspěšně vytvořena")
         navigate('/dashboard');
+
+
     };
 
     if (jsonTemplateLoading) return <p>Loading templates...</p>;

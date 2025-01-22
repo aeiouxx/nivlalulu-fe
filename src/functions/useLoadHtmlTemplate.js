@@ -10,7 +10,7 @@ export function useLoadHtmlTemplate({id}) {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`/templates_data/${id}/${id}.html`);
+                const response = await fetch(`/templates_data/1/${id}.html`);
                 if (response.ok) {
                     const templateData = await response.text();
                     setHtmlTemplates(templateData);

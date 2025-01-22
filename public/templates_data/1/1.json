@@ -4,7 +4,7 @@
   "fields": {
     "items": [
       {
-        "name": "",
+        "name": "item",
         "quantity": 0,
         "unitPrice": 0,
         "taxPrice": 0,
@@ -16,8 +16,8 @@
       "name": "",
       "address": "",
       "country": "",
-      "icTax": null,
-      "dicTax": null,
+      "icTax": "",
+      "dicTax": "",
       "telephone": "",
       "email": ""
     },
@@ -25,14 +25,14 @@
       "name": "",
       "address": "",
       "country": "",
-      "icTax": null,
-      "dicTax": null,
+      "icTax": "",
+      "dicTax": "",
       "telephone": "",
       "email": ""
     },
-    "created_at": null,
-    "expires_at": null,
-    "variable_symbol": 0,
+    "created_at": "",
+    "expires_at": "",
+    "variable_symbol": "",
     "raw_value": 0,
     "tax_value": 0,
     "total_value": 0,

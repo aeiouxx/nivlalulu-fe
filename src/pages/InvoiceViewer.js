@@ -16,7 +16,7 @@ const InvoiceViewer = () => {
     const {data: invoice, isLoading: invoiceIsLoading, error: invoiceLoadingError} = useGetInvoiceByIdQuery(id);
     const {
         htmlTemplate, loading: htmlTemplateLoading, error: htmlTemplateLoadingError
-    } = useLoadHtmlTemplate({id: 1});
+    } = useLoadHtmlTemplate({id: "1-edit"});
 
     const handleExportToPDF = () => {
         const element = document.querySelector('#template-container');
@@ -39,7 +39,6 @@ const InvoiceViewer = () => {
 
     return (
         <Container maxWidth="lg">
-            {JSON.stringify(invoice)}
             <Typography variant="h4" sx={{mt: 4}}>Zobrazení faktury</Typography>
             <Box sx={{mt: 2, display: 'flex', gap: 2}}>
                 <Button variant="contained" color="secondary" startIcon={<ExitToApp/>}

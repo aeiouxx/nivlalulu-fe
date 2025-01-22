@@ -7,12 +7,15 @@ import InvoiceService from '../services/invoiceService';
 import TemplateService from '../services/templateService';
 import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {useGetInvoiceByIdQuery, useUpdateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
+import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
+import {removeEmptyKeys} from "../functions/removeEmptyKeys";
 
 const InvoiceEditor = () => {
     const navigate = useNavigate();
     const {id} = useParams();
     const [invoiceName, setInvoiceName] = useState('');
     const [jsonData, setJsonData] = useState(null);
+    const [jsonDataInitialized, setJsonDataInitialized] = useState(false)
     const [htmlTemplate, setHtmlTemplate] = useState('');
     const [itemTemplate, setItemTemplate] = useState({});
     const [updateInvoice] = useUpdateInvoiceMutation();
@@ -22,7 +25,7 @@ const InvoiceEditor = () => {
         htmlTemplate: htmlLoadedTemplate,
         loading: htmlTemplateLoading,
         error: htmlTemplateLoadingError
-    } = useLoadHtmlTemplate({id: 1});
+    } = useLoadHtmlTemplate({id: "1-edit"});
 
     useEffect(() => {
         if (htmlLoadedTemplate) {
@@ -36,6 +39,17 @@ const InvoiceEditor = () => {
             setJsonData(invoice)
         }
     }, [invoiceIsLoading]);
+
+    useEffect(() => {
+        if (jsonData && !jsonDataInitialized) {
+            setJsonData({
+                ...jsonData,
+                created_at: formatDateToUserInput(new Date()),
+                expires_at: formatDateToUserInput(new Date()),
+            });
+            setJsonDataInitialized(true)
+        }
+    }, [jsonData, jsonDataInitialized])
 
 
     const handleFieldChange = (path, value) => {
@@ -62,10 +76,20 @@ const InvoiceEditor = () => {
     };
 
     const handleUpdateInvoice = async () => {
-        console.log(jsonData)
+
+        const parsedData = {
+            ...jsonData,
+            created_at: parseUserInputToDate(jsonData.created_at)?.toISOString() || "",
+            expires_at: parseUserInputToDate(jsonData.expires_at)?.toISOString() || ""
+        };
+
+        //console.log(parsedData)
+        //console.log(removeEmptyKeys(parsedData))
+
+
         try{
 
-        const result = await updateInvoice({id: id, fieldsObj: jsonData}).unwrap();
+        const result = await updateInvoice({id: id, fieldsObj: removeEmptyKeys(parsedData)}).unwrap();
 
         if (result.error) {
             console.error('Chyba při ukládání faktury:', result.error);
@@ -91,12 +115,8 @@ const InvoiceEditor = () => {
     if (htmlTemplateLoading) return <p>Loading templates...</p>;
     if (htmlTemplateLoadingError) return <p>Error fetching templates: {htmlTemplateLoadingError.message}</p>;
 
-    console.log(jsonData)
-
     return (
         <Container maxWidth="lg">
-            {JSON.stringify(jsonData)}
-
             <Typography variant="h4">Editace faktury</Typography>
             <Box sx={{mt: 2, display: 'flex', gap: 2}}>
                 <Button variant="contained" color="secondary" startIcon={<ExitToApp/>} onClick={() => navigate("/dashboard")}>
