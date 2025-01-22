@@ -1,63 +1,36 @@
-import React, {useState} from 'react';
-import {Avatar, Button, TextField, Link, Grid, Box, Typography, Container} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import AuthService from '../services/authService';
-import axios from "axios";
-import {useDispatch} from "react-redux";
-import {setUser} from "../utils/redux/slices/authSlice";
-
+import React, { useState } from 'react';
+import { Button, TextField, Link, Grid, Box, Typography, Container, Alert } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../utils/redux/slices/authSlice';
+import {useLoginMutation} from "../utils/redux/rtk/publicApi";
 
 const LoginPage = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [login, { isLoading }] = useLoginMutation();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        navigate('/dashboard');
         try {
-            await AuthService.loginUser(username, password);
-        } catch (error) {
-            console.error('Failed to log in:', error);
+            const response = await login(credentials).unwrap();
+            dispatch(setUser(response));
+            navigate('/dashboard');
+        } catch (err) {
             setError('Nesprávné přihlašovací údaje. Zkuste to znovu.');
         }
     };
 
-    const handleLogin = (event) => {
-        event.preventDefault();
-
-        try {
-            axios.post('http://localhost:8080/api/public/v1/auth/login', {
-                    username,
-                    password
-                }
-            )
-                .then(response => {
-                    console.log(response)
-                    dispatch(setUser(response.data))
-                    navigate("/dashboard")
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        } catch (error) {
-            console.error('Failed to log in:', error);
-            setError('Nesprávné přihlašovací údaje. Zkuste to znovu.');
-        }
-    }
+    const handleChange = (e) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    };
 
     return (
         <Container component="main" maxWidth="xs">
             <Button
-                onClick={() => {
-                    setUsername('nivlalulu');
-                    setPassword('nivlalulu');
-                    handleLogin(new Event('submit'));
-                }}
+                onClick={() => setCredentials({ username: 'nivlalulu', password: 'nivlalulu' })}
                 fullWidth
                 variant="outlined"
                 color="secondary"
@@ -72,13 +45,10 @@ const LoginPage = () => {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                    <LockOutlinedIcon/>
-                </Avatar>
                 <Typography component="h1" variant="h5">
                     Přihlášení
                 </Typography>
-                <Box component="form" onSubmit={handleLogin} noValidate sx={{mt: 1}}>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
                         required
@@ -88,8 +58,8 @@ const LoginPage = () => {
                         name="username"
                         autoComplete="username"
                         autoFocus
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={credentials.username}
+                        onChange={handleChange}
                     />
                     <TextField
                         margin="normal"
@@ -100,32 +70,32 @@ const LoginPage = () => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={credentials.password}
+                        onChange={handleChange}
                     />
-                    {/* Zobrazení chybové zprávy, pokud přihlášení selže */}
                     {error && (
-                        <Typography className="error" sx={{mt: 1}}>
+                        <Alert severity="error" sx={{ mt: 2 }}>
                             {error}
-                        </Typography>
+                        </Alert>
                     )}
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{mt: 3, mb: 2}}
+                        sx={{ mt: 3, mb: 2 }}
+                        disabled={isLoading}
                     >
                         Přihlásit se
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link component={RouterLink} to="#" variant="body2">
+                            <Link component={RouterLink} to="/resetPassword" variant="body2">
                                 Zapomněli jste heslo?
                             </Link>
                         </Grid>
                         <Grid item>
                             <Link component={RouterLink} to="/register" variant="body2">
-                                {"Nemáte účet? Zaregistrujte se"}
+                                Nemáte účet? Zaregistrujte se
                             </Link>
                         </Grid>
                     </Grid>

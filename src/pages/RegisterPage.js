@@ -1,40 +1,30 @@
-import React, { useState, useEffect  } from 'react';
-import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import AuthService from '../services/authService';
+import React, {useState} from 'react';
+import {Button, TextField, Link, Grid, Box, Typography, Container, Alert} from '@mui/material';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import {useRegisterMutation} from "../utils/redux/rtk/publicApi";
 
 const RegisterPage = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // Nový stav pro potvrzení hesla
-    const [error, setError] = useState(''); // Stav pro chybovou zprávu
+    const [form, setForm] = useState({username: '', email: '', password: '', confirmPassword: ''});
+    const [error, setError] = useState('');
     const navigate = useNavigate();
+    const [register, {isLoading}] = useRegisterMutation();
 
-    useEffect(() => {
-        if (confirmPassword && password !== confirmPassword) {
-            setError('Hesla se neshodují');
-        } else {
-            setError('');
-        }
-    }, [password, confirmPassword]);
+    const handleChange = (e) => {
+        setForm({...form, [e.target.name]: e.target.value});
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Kontrola, zda se hesla shodují
-        if (password !== confirmPassword) {
-            setError('Hesla se neshodují');
+        if (form.password !== form.confirmPassword) {
+            setError('Hesla se neshodují.');
             return;
         }
-
         try {
-            await AuthService.registerUser(username, password, email);
-            navigate('/dashboard'); // Přesměrování na hlavní stránku po úspěšné registraci
-        } catch (error) {
-            console.error('Failed to register:', error);
-            setError('Registrace se nezdařila. Zkuste to znovu.');
+            await register({username: form.username, email: form.email, password: form.password}).unwrap();
+            navigate('/dashboard');
+        } catch (err) {
+            console.log(err)
+            setError('Registrace se nezdařila: ' + err.data.password);
         }
     };
 
@@ -48,13 +38,10 @@ const RegisterPage = () => {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar>
                 <Typography component="h1" variant="h5">
                     Registrace
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                     <TextField
                         margin="normal"
                         required
@@ -62,9 +49,8 @@ const RegisterPage = () => {
                         id="username"
                         label="Uživatelské jméno"
                         name="username"
-                        autoFocus
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={form.username}
+                        onChange={handleChange}
                     />
                     <TextField
                         margin="normal"
@@ -73,9 +59,8 @@ const RegisterPage = () => {
                         id="email"
                         label="Emailová adresa"
                         name="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={form.email}
+                        onChange={handleChange}
                     />
                     <TextField
                         margin="normal"
@@ -85,9 +70,8 @@ const RegisterPage = () => {
                         label="Heslo"
                         type="password"
                         id="password"
-                        autoComplete="new-password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={form.password}
+                        onChange={handleChange}
                     />
                     <TextField
                         margin="normal"
@@ -97,27 +81,27 @@ const RegisterPage = () => {
                         label="Potvrzení hesla"
                         type="password"
                         id="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        value={form.confirmPassword}
+                        onChange={handleChange}
                     />
-                    {/* Zobrazení chybové zprávy, pokud se hesla neshodují */}
                     {error && (
-                        <Typography className="error" sx={{ mt: 1 }}>
+                        <Alert severity="error" sx={{mt: 2}}>
                             {error}
-                        </Typography>
+                        </Alert>
                     )}
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{mt: 3, mb: 2}}
+                        disabled={isLoading}
                     >
                         Zaregistrovat se
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Link component={RouterLink} to="/login" variant="body2">
-                                {"Už máte účet? Přihlaste se"}
+                                Už máte účet? Přihlaste se
                             </Link>
                         </Grid>
                     </Grid>

@@ -1,128 +1,112 @@
-import React, { useEffect, useState, } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
-import { Save, ExitToApp } from '@mui/icons-material';
-import AuthService from '../services/authService';
+import React, { useState } from "react";
+import { Container, Typography, TextField, Button, Stack, Alert } from "@mui/material";
+import { Save } from "@mui/icons-material";
+import {
+    useChangeEmailMutation,
+    useChangePasswordMutation,
+    useChangeUsernameMutation
+} from "../utils/redux/rtk/accountApi";
+
 
 const ProfilePage = () => {
-    const navigate = useNavigate();
-    const [userData, setUserData] = useState({
-        username: '',
-        email: '',
-        password: ''
-    });
-    const [error, setError] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [originalData, setOriginalData] = useState({});
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState(false);
 
-    useEffect(() => {
-        if (confirmPassword && userData.password !== confirmPassword) {
-            setError('Hesla se neshodují');
-        } else {
-            setError('');
+    const [changeUsername] = useChangeUsernameMutation();
+    const [changeEmail] = useChangeEmailMutation();
+    const [changePassword] = useChangePasswordMutation();
+
+    const handleUsernameChange = async () => {
+        try {
+            await changeUsername(username).unwrap();
+            setMessage("Uživatelské jméno bylo úspěšně změněno.");
+            alert("Změna se projeví po novém přihlášení")
+            setError(false);
+        } catch (err) {
+            setMessage("Nepodařilo se změnit uživatelské jméno.");
+            setError(true);
         }
-    }, [userData.password, confirmPassword]);
-
-    useEffect(() => {
-        // Načtení dat uživatele při inicializaci stránky
-        const loadUserData = async () => {
-            try {
-                const user = await AuthService.getUserFromToken();
-                console.log(user)
-                setUserData(user);
-                setOriginalData(user); // Uchování původních dat pro kontrolu změn
-            } catch (error) {
-                console.error('Chyba při načítání profilu:', error);
-            }
-        };
-
-        loadUserData();
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUserData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleSave = async () => {
+    const handleEmailChange = async () => {
         try {
-            await AuthService.updateUserProfile(userData);
-            setOriginalData(userData); // Aktualizace uložených dat po úspěšném uložení
-            alert('Údaje byly úspěšně uloženy.');
-        } catch (error) {
-            console.error('Chyba při ukládání údajů:', error);
-            alert('Ukládání údajů se nezdařilo.');
+            await changeEmail(email).unwrap();
+            setMessage("Email byl úspěšně změněn.");
+            setError(false);
+        } catch (err) {
+            setMessage("Nepodařilo se změnit email.");
+            setError(true);
+        }
+    };
+
+    const handlePasswordChange = async () => {
+        try {
+            await changePassword({ oldPassword, newPassword }).unwrap();
+            setMessage("Heslo bylo úspěšně změněno.");
+            setError(false);
+        } catch (err) {
+            setMessage("Nepodařilo se změnit heslo.");
+            setError(true);
         }
     };
 
     return (
         <Container maxWidth="sm">
-            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-                Profil uživatele
+            <Typography variant="h4" gutterBottom>
+                Profil
             </Typography>
-            <Box component="form" sx={{ mt: 1 }}>
-                <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Uživatelské jméno"
-                    name="username"
-                    value={userData.username}
-                    onChange={handleChange}
-                />
-                <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Email"
-                    name="email"
-                    value={userData.email}
-                    onChange={handleChange}
-                />
-                <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Nové heslo"
-                    name="password"
-                    type="password"
-                    value={userData.password}
-                    onChange={handleChange}
-                    placeholder="Zadejte nové heslo"
-                />
-                <TextField
-                        margin="normal"
-                        required
+            <Stack spacing={3}>
+                {message && <Alert severity={error ? "error" : "success"}>{message}</Alert>}
+                <Stack direction="row" spacing={2}>
+                    <TextField
                         fullWidth
-                        name="confirmPassword"
-                        label="Potvrzení hesla"
-                        type="password"
-                        id="confirmPassword"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        label="Uživatelské jméno"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
-                     {error && (
-                        <Typography className="error" sx={{ mt: 1 }}>
-                            {error}
-                        </Typography>
-                    )}
-                    <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                    <Button variant="contained" onClick={handleUsernameChange}>
+                        Uložit
+                    </Button>
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                    <TextField
+                        fullWidth
+                        label="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <Button variant="contained" onClick={handleEmailChange}>
+                        Uložit
+                    </Button>
+                </Stack>
+                <Stack spacing={2}>
+                    <TextField
+                        fullWidth
+                        label="Staré heslo"
+                        type="password"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Nové heslo"
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
                     <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<Save />}
-                    onClick={handleSave}
-                    disabled={JSON.stringify(userData) === JSON.stringify(originalData)}
-                >
-                    Uložit změny
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<ExitToApp />}
-                    onClick={() => { navigate('/dashboard') }}
-                >
-                    Zavřít
-                </Button>
-                    </Box>
-            </Box>
+                        variant="contained"
+                        startIcon={<Save />}
+                        onClick={handlePasswordChange}
+                    >
+                        Změnit heslo
+                    </Button>
+                </Stack>
+            </Stack>
         </Container>
     );
 };

@@ -13,6 +13,7 @@ import IndexPage from "./pages/IndexPage";
 import AppLayout from "./layouts/AppLayout";
 import store from "./utils/redux/store";
 import {Provider, useSelector} from "react-redux";
+import {ResetPasswordPage} from "./pages/ResetPasswordPage";
 
 const ProtectedRoute = () => {
     const isLoggedIn = useSelector((state) => state.auth.accessToken != null);
@@ -21,7 +22,6 @@ const ProtectedRoute = () => {
         return <Navigate to="/" replace />;
     }
 
-    // <Outlet /> tu zobrazí vnořené routy ( /dashboard, /profil apod.)
     return <Outlet />;
 };
 
@@ -36,6 +36,7 @@ function App() {
                         <Route path="/" element={<IndexPage/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
                         <Route path="/register" element={<RegisterPage/>}/>
+                        <Route path="/resetPassword" element={<ResetPasswordPage/>}/>
 
                         {/* Chráněné trasy */}
                         <Route element={<ProtectedRoute/>}>
@@ -47,7 +48,7 @@ function App() {
                         </Route>
 
                         {/* Trvalá trasa pro neplatné cesty */}
-                        <Route path="*" element={<Navigate to="/login"/>}/>
+                        <Route path="*" element={<Navigate to="/"/>}/>
                     </Routes>
                 </AppLayout>
             </Router>

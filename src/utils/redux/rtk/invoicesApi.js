@@ -8,7 +8,7 @@ export const invoicesApi = createApi({
     endpoints: (builder) => ({
         getItems: builder.query({
             query: () => '/invoices',
-            providesTags: ['Invoices'], // Propojení se seznamem faktur
+            providesTags: ['Invoices'],
         }),
         getAllFilteredInvoices: builder.query({
             query: (searchDto) => {

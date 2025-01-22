@@ -12,3 +12,7 @@ export const customBaseQuery = fetchBaseQuery({
         return headers;
     },
 });
+
+export const publicBaseQuery = fetchBaseQuery({
+    baseUrl: 'http://localhost:8080/api/public/v1/',
+});
