@@ -9,6 +9,7 @@ import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {useGetInvoiceByIdQuery, useUpdateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
 import {removeEmptyKeys} from "../functions/removeEmptyKeys";
+import {updatePrices} from "../functions/calculations/functions";
 
 const InvoiceEditor = () => {
     const navigate = useNavigate();
@@ -42,10 +43,13 @@ const InvoiceEditor = () => {
 
     useEffect(() => {
         if (jsonData && !jsonDataInitialized) {
-            setJsonData({
-                ...jsonData,
-                created_at: formatDateToUserInput(new Date()),
-                expires_at: formatDateToUserInput(new Date()),
+            setJsonData(prev => {
+                const updatedInvoice = {
+                    ...jsonData,
+                    created_at: formatDateToUserInput(new Date()),
+                    expires_at: formatDateToUserInput(new Date()),
+                }
+                return updatePrices(updatedInvoice)
             });
             setJsonDataInitialized(true)
         }
@@ -71,7 +75,7 @@ const InvoiceEditor = () => {
                 console.error('Chyba při změně pole:', error);
             }
 
-            return newData;
+            return updatePrices(newData);
         });
     };
 
@@ -83,22 +87,18 @@ const InvoiceEditor = () => {
             expires_at: parseUserInputToDate(jsonData.expires_at)?.toISOString() || ""
         };
 
-        //console.log(parsedData)
-        //console.log(removeEmptyKeys(parsedData))
+        try {
 
+            const result = await updateInvoice({id: id, fieldsObj: removeEmptyKeys(parsedData)}).unwrap();
 
-        try{
+            if (result.error) {
+                console.error('Chyba při ukládání faktury:', result.error);
+                const errorMessages = result.error.data;
+                alert("Fakturu se nepodařilo uložit, oprav chyby:\n\n" + Object.values(errorMessages).join("\n"));
+                return
+            }
 
-        const result = await updateInvoice({id: id, fieldsObj: removeEmptyKeys(parsedData)}).unwrap();
-
-        if (result.error) {
-            console.error('Chyba při ukládání faktury:', result.error);
-            const errorMessages = result.error.data;
-            alert("Fakturu se nepodařilo uložit, oprav chyby:\n\n" + Object.values(errorMessages).join("\n"));
-            return
-        }
-
-        }catch(e){
+        } catch (e) {
             console.error('Chyba při ukládání faktury:', e.message);
         }
 
@@ -119,7 +119,8 @@ const InvoiceEditor = () => {
         <Container maxWidth="lg">
             <Typography variant="h4">Editace faktury</Typography>
             <Box sx={{mt: 2, display: 'flex', gap: 2}}>
-                <Button variant="contained" color="secondary" startIcon={<ExitToApp/>} onClick={() => navigate("/dashboard")}>
+                <Button variant="contained" color="secondary" startIcon={<ExitToApp/>}
+                        onClick={() => navigate("/dashboard")}>
                     Zpět
                 </Button>
                 <Button variant="contained" color="primary" onClick={handleUpdateInvoice} startIcon={<Save/>}>
