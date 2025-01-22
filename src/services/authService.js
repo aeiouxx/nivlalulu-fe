@@ -12,13 +12,12 @@ function generateToken(length = 20) {
 class AuthService {
     // Registrace nového uživatele
     async registerUser(username, password, email) {
-        const token = generateToken();
-        return await ApiClient.post('/users', { username, password, email, token});
+        return await ApiClient.post('/api/public/v1/auth/register', { username, email, password});
     }
 
     // Přihlášení uživatele
     async loginUser(username, password) {
-        const users = await ApiClient.get('/users');
+        const users = await ApiClient.get('/api/public/v1/auth/login');
         const user = users.find(u => u.username === username && u.password === password);
 
         if (!user) {

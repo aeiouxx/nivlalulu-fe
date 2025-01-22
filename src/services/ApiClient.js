@@ -91,4 +91,4 @@ class ApiClient {
     }
 }
 
-export default new ApiClient('http://localhost:3001'); // Nastavte baseURL podle serveru
+export default new ApiClient('http://localhost:8080'); // Nastavte baseURL podle serveru
