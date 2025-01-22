@@ -11,10 +11,14 @@ export const invoicesApi = createApi({
             providesTags: ['Invoices'], // Propojení se seznamem faktur
         }),
         getAllFilteredInvoices: builder.query({
-            query: (searchObj) => ({
-                url: "/invoices/search",
-                body: searchObj
-            }),
+            query: (searchDto) => {
+                const queryString = new URLSearchParams(searchDto).toString();
+                return {
+                    url: `/invoices/search?${queryString}`,
+                    method: 'GET',
+                };
+            },
+            keepUnusedDataFor: 0,
         }),
         getInvoiceById: builder.query({
             query: (id) => ({
@@ -50,6 +54,7 @@ export const invoicesApi = createApi({
 
 export const {
     useGetItemsQuery,
+    useGetAllFilteredInvoicesQuery,
     useGetInvoiceByIdQuery, // Export pro specifickou fakturu
     useCreateInvoiceMutation,
     useDeleteInvoiceMutation,

@@ -1,18 +1,38 @@
 import {useNavigate} from "react-router-dom";
-import {useDeleteInvoiceMutation, useGetItemsQuery} from "../utils/redux/rtk/invoicesApi";
+import {
+    useDeleteInvoiceMutation,
+    useGetAllFilteredInvoicesQuery,
+    useGetItemsQuery
+} from "../utils/redux/rtk/invoicesApi";
 import React, {useEffect, useState} from "react";
 import CustomTable from "./CustomTable";
 import {formatDateToUserInput} from "../functions/timeFunctions";
-import {IconButton, Stack, TextField} from "@mui/material";
+import {IconButton, Stack, TextField, ToggleButton, ToggleButtonGroup} from "@mui/material";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export function UserInvoicesTable() {
-    const {data: invoices2, error, isLoading} = useGetItemsQuery();
-    const [deleteInvoice] = useDeleteInvoiceMutation();
     const navigate = useNavigate();
-    const [searchValue, setSearchValue] = useState("");
-    const showSearchResults = searchValue !== ""
 
+    const [searchValue, setSearchValue] = useState("");
+    const [searchCriteria, setSearchCriteria] = React.useState('variableSymbol');
+    const showSearchResults = searchValue !== ""
+    const [filter, setFilter] = useState({})
+
+    const {data: invoices, error, isLoading} = useGetItemsQuery();
+    const [deleteInvoice] = useDeleteInvoiceMutation();
+    const {
+        data: filteredInvoices,
+        error: errorLoadingFilteredInvoices,
+        isLoading: loadingFilteredInvoices
+    } = useGetAllFilteredInvoicesQuery(filter)
+
+    const handleChange = (event, value) => {
+        setSearchCriteria(value);
+    };
+
+    useEffect(() => {
+        setFilter({[searchCriteria]: searchValue})
+    }, [searchValue])
 
     function handleRowClick(row) {
         navigate(`/invoice/${row.id}`)
@@ -29,11 +49,11 @@ export function UserInvoicesTable() {
     }
 
     const columns = [
-        {field: 'id', headerName: 'id'},
-        {field: 'created_at', headerName: 'created_at', render: (_, row) => formatDateToUserInput(row.created_at)},
-        {field: 'variable_symbol', headerName: 'variable_symbol'},
-        {field: 'total_value', headerName: 'total_value'},
-        {field: 'contact', headerName: 'contact'},
+        {field: 'created_at', headerName: 'Vytvořeno', render: (_, row) => formatDateToUserInput(row.created_at)},
+        {field: 'variable_symbol', headerName: 'Variabilní symbol'},
+        {field: 'customer', headerName: 'Jméno zákazníka', render: (_,row) => row.customer?.name || "N/A"},
+        {field: 'supplier_name', headerName: 'Jméno dodavatele', render: (_,row) => row.supplier?.name || "N/A"},
+        {field: 'total_value', headerName: 'Celková částka'},
         {
             field: "action", headerName: "", render: (_, row) => {
                 return (
@@ -48,9 +68,25 @@ export function UserInvoicesTable() {
 
     return (
         <Stack spacing={1}>
-            <TextField size={"small"} fullWidth label="Vyhledávání podle variabliního symbolu" value={searchValue}
-                       onChange={e => setSearchValue(e.target.value)}/>
-            <CustomTable columns={columns} data={invoices2?.content || []} onRowClick={handleRowClick}/>
+            <Stack direction={"row"} spacing={1}>
+                <TextField size={"small"} fullWidth label="Vyhledávání podle variabliního symbolu" value={searchValue}
+                           onChange={e => setSearchValue(e.target.value)}/>
+                <ToggleButtonGroup
+                    fullWidth
+                    color="primary"
+                    value={searchCriteria}
+                    exclusive
+                    onChange={handleChange}
+                    size={"small"}
+                >
+                    <ToggleButton value="variableSymbol">var.symbol</ToggleButton>
+                    <ToggleButton value="customerName">Jméno zákazníka</ToggleButton>
+                    <ToggleButton value="supplierName">Jméno dodavatele</ToggleButton>
+                </ToggleButtonGroup>
+            </Stack>
+            <CustomTable columns={columns}
+                         data={showSearchResults ? filteredInvoices?.content : invoices?.content || []}
+                         onRowClick={handleRowClick}/>
         </Stack>
     )
 }
