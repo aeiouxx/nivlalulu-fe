@@ -55,6 +55,11 @@ const TemplateEditor = () => {
         }
     }, [jsonData, jsonDataInitialized])
 
+    function updatePrices(){
+        setJsonData((prevData) => {
+
+        })
+    }
 
     const handleFieldChange = (path, value) => {
         setJsonData((prevData) => {

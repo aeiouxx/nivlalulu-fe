@@ -3,8 +3,8 @@ import AuthService from "../services/authService";
 import {Button, IconButton, Stack, Typography} from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import {useDispatch, useSelector} from "react-redux";
-import {clearUser} from "../utils/redux/slices/authSlice";
+import {useSelector} from "react-redux";
+import {useLogout} from "../functions/auth/handleLogout";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -12,13 +12,7 @@ export default function Header() {
     const locationIsDashboard = location.pathname === "/dashboard"
     const user = useSelector(state => state.auth)
     const userIsLoggedIn = user.username != null;
-    const dispatch = useDispatch();
-
-    const handleLogout = () => {
-        AuthService.logoutUser();
-        dispatch(clearUser())
-        navigate('/');
-    };
+    const handleLogout = useLogout();
 
     const handleProfile = () => {
         navigate('/profil');
@@ -52,7 +46,8 @@ export default function Header() {
                         <Typography variant={"body1"}>{user.username || "error"}</Typography>
                         <Stack alignItems={"center"} direction={"row"}>
                             <IconButton onClick={handleProfile}><AccountCircleIcon fontSize={'medium'}/></IconButton>
-                            <IconButton onClick={handleLogout}><LogoutIcon fontSize={'medium'}/></IconButton>
+                            <IconButton onClick={handleLogout}><LogoutIcon
+                                fontSize={'medium'}/></IconButton>
                         </Stack>
                         {!locationIsDashboard && <Button onClick={navigateToDashboard} variant={"outlined"}
                                                          size={"small"}>Dashboard</Button>}

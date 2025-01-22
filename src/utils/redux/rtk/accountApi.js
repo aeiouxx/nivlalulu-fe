@@ -26,6 +26,14 @@ export const accountApi = createApi({
                 body: {newEmail},
             }),
         }),
+
+        logout: builder.mutation({
+            query: () => ({
+                url: "account",
+                method: "POST",
+            }),
+        }),
+
     }),
 });
 
@@ -33,4 +41,5 @@ export const {
     useChangeUsernameMutation,
     useChangePasswordMutation,
     useChangeEmailMutation,
+    useLogoutMutation,
 } = accountApi;

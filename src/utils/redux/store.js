@@ -15,7 +15,7 @@ const store = configureStore({
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(invoicesApi.middleware).concat(accountApi.middleware).concat(authApi.middleware)
-    .concat(logger),
+    //.concat(logger),
 });
 
 setupListeners(store.dispatch);
