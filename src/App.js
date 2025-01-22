@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Navigate, Outlet} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
@@ -12,7 +12,18 @@ import InvoiceEditor from "./pages/InvoiceEditor";
 import IndexPage from "./pages/IndexPage";
 import AppLayout from "./layouts/AppLayout";
 import store from "./utils/redux/store";
-import {Provider} from "react-redux";
+import {Provider, useSelector} from "react-redux";
+
+const ProtectedRoute = () => {
+    const isLoggedIn = useSelector((state) => state.auth.accessToken != null);
+
+    if (!isLoggedIn) {
+        return <Navigate to="/" replace />;
+    }
+
+    // <Outlet /> tu zobrazí vnořené routy ( /dashboard, /profil apod.)
+    return <Outlet />;
+};
 
 function App() {
     return (
@@ -22,17 +33,18 @@ function App() {
                 <AppLayout>
                     <Routes>
                         {/* Veřejné trasy */}
+                        <Route path="/" element={<IndexPage/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
                         <Route path="/register" element={<RegisterPage/>}/>
 
                         {/* Chráněné trasy */}
-                        {/* TODO PŘIDAT  <Route element={<ProtectedRoute />}>*/}
-                        <Route path="/" element={<IndexPage/>}/>
-                        <Route path="/dashboard" element={<Dashboard/>}/>
-                        <Route path="/profil" element={<Profil/>}/>
-                        <Route path="/template/:id" element={<TemplateEditor/>}/>
-                        <Route path="/invoice/:id" element={<InvoiceViewer/>}/>
-                        <Route path="/invoice/update/:id" element={<InvoiceEditor/>}/>
+                        <Route element={<ProtectedRoute/>}>
+                            <Route path="/dashboard" element={<Dashboard/>}/>
+                            <Route path="/profil" element={<Profil/>}/>
+                            <Route path="/template/:id" element={<TemplateEditor/>}/>
+                            <Route path="/invoice/:id" element={<InvoiceViewer/>}/>
+                            <Route path="/invoice/update/:id" element={<InvoiceEditor/>}/>
+                        </Route>
 
                         {/* Trvalá trasa pro neplatné cesty */}
                         <Route path="*" element={<Navigate to="/login"/>}/>
@@ -44,3 +56,4 @@ function App() {
 }
 
 export default App;
+

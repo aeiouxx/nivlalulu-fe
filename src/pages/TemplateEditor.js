@@ -8,6 +8,7 @@ import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {useCreateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
 import {removeEmptyKeys} from "../functions/removeEmptyKeys";
+import { v4 as uuidv4 } from 'uuid';
 
 const TemplateEditor = () => {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ const TemplateEditor = () => {
                 total_value: 0,
                 created_at: formatDateToUserInput(new Date()),
                 expires_at: formatDateToUserInput(new Date()),
-                variable_symbol: 0,
+                variable_symbol: uuidv4(),
                 tax_value: 0,
                 raw_value: 0,
                 paymentMethod: "P",
