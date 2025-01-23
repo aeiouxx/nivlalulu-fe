@@ -1,20 +1,19 @@
-// calculations.js
-
 // Výpočet celkové daně
 export function calculateTotalTax(items = []) {
     return items.reduce((total, item) => {
         const taxPrice = Number(item?.taxPrice || 0);
         const quantity = Number(item?.quantity || 0);
         return total + taxPrice * quantity;
-    }, 0).toFixed(3);
+    }, 0).toFixed(2);
 }
 
-// Výpočet celkové ceny
-export function calculateTotalPrice(items = []) {
+// Výpočet celkové jednotkové ceny
+export function calculateTotalUnitPrice(items = []) {
     return items.reduce((total, item) => {
-        const totalPrice = Number(item?.totalPrice || 0);
-        return total + totalPrice;
-    }, 0).toFixed(3);
+        const quantity = Number(item?.quantity || 0);
+        const unitPrice = Number(item?.unitPrice || 0);
+        return total + unitPrice * quantity;
+    }, 0).toFixed(2);
 }
 
 // Výpočet mezisoučtu
@@ -23,7 +22,7 @@ export function calculateSubtotal(items = []) {
         const unitPrice = Number(item?.unitPrice || 0);
         const quantity = Number(item?.quantity || 0);
         return total + unitPrice * quantity;
-    }, 0).toFixed(3);
+    }, 0).toFixed(2);
 }
 
 // Výpočet celkového počtu položek
@@ -31,14 +30,14 @@ export function calculateTotalItems(items = []) {
     return items.reduce((total, item) => {
         const quantity = Number(item?.quantity || 0);
         return total + quantity;
-    }, 0).toFixed(3);
+    }, 0).toFixed(2);
 }
 
 // Výpočet celkové částky
 export function calculateGrandTotal(items = []) {
     const subtotal = Number(calculateSubtotal(items));
     const totalTax = Number(calculateTotalTax(items));
-    return (subtotal + totalTax).toFixed(3);
+    return (subtotal + totalTax).toFixed(2);
 }
 
 // Zpracování položek
@@ -47,8 +46,8 @@ export function processItems(items = []) {
         const unitPrice = Number(item?.unitPrice || 0);
         const quantity = Number(item?.quantity || 0);
 
-        const taxPrice = Number((unitPrice * 0.21).toFixed(3));
-        const totalPrice = Number((quantity * unitPrice + quantity * taxPrice).toFixed(3));
+        const taxPrice = Number((unitPrice * 0.21).toFixed(2));
+        const totalPrice = Number((quantity * unitPrice + quantity * taxPrice).toFixed(2));
 
         return {
             ...item,
@@ -65,7 +64,7 @@ export function updatePrices(jsonData = {}) {
     return {
         ...jsonData,
         items,
-        raw_value: calculateTotalItems(items).toString(),
+        raw_value: calculateTotalUnitPrice(items).toString(),
         tax_value: calculateTotalTax(items).toString(),
         total_value: calculateGrandTotal(items).toString(),
     };

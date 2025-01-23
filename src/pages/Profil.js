@@ -6,9 +6,8 @@ import {
     useChangePasswordMutation,
     useChangeUsernameMutation
 } from "../utils/redux/rtk/accountApi";
-import {handleLogout, useLogout} from "../functions/auth/handleLogout";
-import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import { useLogout} from "../functions/auth/handleLogout";
+
 
 
 const ProfilePage = () => {

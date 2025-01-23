@@ -3,6 +3,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useLogoutMutation} from "../../utils/redux/rtk/accountApi";
 import {invoicesApi} from "../../utils/redux/rtk/invoicesApi";
+import {clearTimer} from "../../utils/redux/slices/timerSlice";
 
 export function useLogout() {
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ export function useLogout() {
         try {
             await logout().unwrap();
             dispatch(invoicesApi.util.resetApiState());
+            dispatch(clearTimer())
             dispatch(clearUser());
             navigate('/');
         } catch (error) {

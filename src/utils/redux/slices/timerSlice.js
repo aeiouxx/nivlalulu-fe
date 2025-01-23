@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const timerSlice = createSlice({
     name: "timer",
     initialState: {
         isRunning: false,
-        interval: 0, // Výchozí interval 10 sekund
+        interval: 0,
     },
     reducers: {
         startTimer: (state) => {
@@ -16,8 +16,12 @@ const timerSlice = createSlice({
         setInterval: (state, action) => {
             state.interval = action.payload;
         },
+        clearTimer: (state) => {
+            state.interval = 0
+            state.isRunning = false
+        }
     },
 });
 
-export const { startTimer, stopTimer, setInterval } = timerSlice.actions;
+export const {startTimer, stopTimer, setInterval, clearTimer} = timerSlice.actions;
 export default timerSlice.reducer;
