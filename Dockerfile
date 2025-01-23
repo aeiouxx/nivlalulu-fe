@@ -1,14 +1,20 @@
+# Použití oficiálního Node.js image
 FROM node:18
 
+# Nastavení pracovního adresáře v kontejneru
 WORKDIR /app
 
+# Kopírování package.json a package-lock.json
 COPY package*.json ./
 
+# Instalace závislostí
 RUN npm install
 
+# Kopírování celého projektu
 COPY . .
 
-RUN npm run build
-EXPOSE 5000
+# Exponování portu pro vývojový server
+EXPOSE 3000
 
-CMD ["npx", "serve", "-s", "build", "-l", "5000"]
+# Start vývojového serveru
+CMD ["npm", "start"]
