@@ -1,4 +1,3 @@
-import './App.css';
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate, Outlet} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';

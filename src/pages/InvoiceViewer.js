@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
 import {Container, Typography, Button, Box} from '@mui/material';
-import {ExitToApp, Delete, PictureAsPdf, Edit} from '@mui/icons-material';
+import {ExitToApp, PictureAsPdf, Edit} from '@mui/icons-material';
 import TemplateRenderer from '../components/TemplateRenderer';
-import InvoiceService from '../services/invoiceService';
-import TemplateService from '../services/templateService';
 import html2pdf from 'html2pdf.js';
-import {useGetInvoiceByIdQuery, useGetItemsQuery} from "../utils/redux/rtk/invoicesApi";
+import {useGetInvoiceByIdQuery} from "../utils/redux/rtk/invoicesApi";
 import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {formatDateToUserInput} from "../functions/timeFunctions";
 import {updatePrices} from "../functions/calculations/functions";

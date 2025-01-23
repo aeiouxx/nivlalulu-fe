@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Container, Typography, Button, Box, TextField} from '@mui/material';
+import {Container, Typography, Button, Box} from '@mui/material';
 import {Save, ExitToApp} from '@mui/icons-material';
 import TemplateRenderer from '../components/TemplateRenderer';
 import {useLoadJsonTemplate} from "../functions/useLoadJsonTemplate";
@@ -10,9 +10,6 @@ import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunc
 import {removeEmptyKeys} from "../functions/removeEmptyKeys";
 import {v4 as uuidv4} from 'uuid';
 import {
-    calculateGrandTotal,
-    calculateTotalItems,
-    calculateTotalTax,
     updatePrices
 } from "../functions/calculations/functions";
 

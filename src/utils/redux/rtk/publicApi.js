@@ -42,7 +42,6 @@ export const authApi = createApi({
     }),
 });
 
-// Export mutací pro použití v komponentách
 export const {
     useRegisterMutation,
     useLoginMutation,

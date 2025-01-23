@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
-import {Container, Typography, Button, TextField, Box} from '@mui/material';
+import {Container, Typography, Button, Box} from '@mui/material';
 import {Save, ExitToApp} from '@mui/icons-material';
 import TemplateRenderer from '../components/TemplateRenderer';
-import InvoiceService from '../services/invoiceService';
-import TemplateService from '../services/templateService';
 import {useLoadHtmlTemplate} from "../functions/useLoadHtmlTemplate";
 import {useGetInvoiceByIdQuery, useUpdateInvoiceMutation} from "../utils/redux/rtk/invoicesApi";
 import {formatDateToUserInput, parseUserInputToDate} from "../functions/timeFunctions";
@@ -14,7 +12,6 @@ import {updatePrices} from "../functions/calculations/functions";
 const InvoiceEditor = () => {
     const navigate = useNavigate();
     const {id} = useParams();
-    const [invoiceName, setInvoiceName] = useState('');
     const [jsonData, setJsonData] = useState(null);
     const [jsonDataInitialized, setJsonDataInitialized] = useState(false)
     const [htmlTemplate, setHtmlTemplate] = useState('');
@@ -127,13 +124,6 @@ const InvoiceEditor = () => {
                     Ulož fakturu
                 </Button>
             </Box>
-            <TextField
-                label="Název faktury"
-                value={invoiceName}
-                onChange={(e) => setInvoiceName(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
             {htmlTemplate && jsonData ? (
                 <TemplateRenderer
                     htmlTemplate={htmlTemplate}
