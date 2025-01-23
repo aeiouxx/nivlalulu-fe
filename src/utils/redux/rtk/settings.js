@@ -21,4 +21,10 @@ export const customBaseQuery = fetchBaseQuery({
 
 export const publicBaseQuery = fetchBaseQuery({
     baseUrl: process.env.REACT_APP_BASE_URL_PUBLIC,
+    credentials: 'include',
+    httpsAgent: new (require('https-browserify').Agent)({
+        rejectUnauthorized: false,
+        requestCert: false,
+        agent: false,
+    }),
 });
