@@ -1,37 +1,30 @@
-import React, { useState } from 'react';
-import { Button, TextField, Link, Grid, Box, Typography, Container, Alert } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../utils/redux/slices/authSlice';
-import {useLoginMutation} from "../utils/redux/rtk/publicApi";
+import React, {useState} from 'react';
+import {Button, TextField, Link, Grid, Box, Typography, Container, Alert} from '@mui/material';
+import {Link as RouterLink} from 'react-router-dom';
+import {useLogin} from "../functions/auth/handleLogin";
 
 const LoginPage = () => {
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    const [credentials, setCredentials] = useState({username: '', password: ''});
     const [error, setError] = useState('');
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [login, { isLoading }] = useLoginMutation();
+    const handleLogin = useLogin();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await login(credentials).unwrap();
-            console.log(response)
-            dispatch(setUser(response));
-            navigate('/dashboard');
+            await handleLogin(credentials)
         } catch (err) {
             setError('Nesprávné přihlašovací údaje. Zkuste to znovu.');
         }
     };
 
     const handleChange = (e) => {
-        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+        setCredentials({...credentials, [e.target.name]: e.target.value});
     };
 
     return (
         <Container component="main" maxWidth="xs">
             <Button
-                onClick={() => setCredentials({ username: 'nivlalulu', password: 'nivlalulu' })}
+                onClick={() => setCredentials({username: 'nivlalulu', password: 'nivlalulu'})}
                 fullWidth
                 variant="outlined"
                 color="secondary"
@@ -49,7 +42,7 @@ const LoginPage = () => {
                 <Typography component="h1" variant="h5">
                     Přihlášení
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                     <TextField
                         margin="normal"
                         required
@@ -75,7 +68,7 @@ const LoginPage = () => {
                         onChange={handleChange}
                     />
                     {error && (
-                        <Alert severity="error" sx={{ mt: 2 }}>
+                        <Alert severity="error" sx={{mt: 2}}>
                             {error}
                         </Alert>
                     )}
@@ -83,8 +76,7 @@ const LoginPage = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        disabled={isLoading}
+                        sx={{mt: 3, mb: 2}}
                     >
                         Přihlásit se
                     </Button>

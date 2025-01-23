@@ -18,7 +18,6 @@ import {
 
 const TemplateEditor = () => {
     const navigate = useNavigate();
-    const [invoiceName, setInvoiceName] = useState('');
     const [jsonData, setJsonData] = useState(null);
     const [jsonDataInitialized, setJsonDataInitialized] = useState(false)
     const [htmlTemplate, setHtmlTemplate] = useState('');
@@ -135,13 +134,7 @@ const TemplateEditor = () => {
                     Ulož fakturu
                 </Button>
             </Box>
-            <TextField
-                margin="normal"
-                fullWidth
-                label="Název faktury"
-                value={invoiceName}
-                onChange={(e) => setInvoiceName(e.target.value)}
-            />
+
             <TemplateRenderer
                 htmlTemplate={htmlTemplate}
                 jsonData={jsonData}

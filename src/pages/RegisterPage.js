@@ -24,7 +24,7 @@ const RegisterPage = () => {
             navigate('/dashboard');
         } catch (err) {
             console.log(err)
-            setError('Registrace se nezdařila: ' + err.data.password);
+            setError('Registrace se nezdařila: ' + JSON.stringify(err.data));
         }
     };
 

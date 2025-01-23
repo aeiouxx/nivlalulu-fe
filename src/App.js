@@ -27,8 +27,6 @@ const ProtectedRoute = () => {
 };
 
 function App() {
-    console.log('Private Base URL:', process.env.REACT_APP_BASE_URL_PRIVATE);
-    console.log('Public Base URL:', process.env.REACT_APP_BASE_URL_PUBLIC);
     return (
         <Provider store={store}>
             <Router>

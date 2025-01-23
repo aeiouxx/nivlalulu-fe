@@ -8,8 +8,6 @@ const Dashboard = () => {
     const user = useSelector(state => state.auth);
     const dispatch = useDispatch()
 
-    dispatch(setInterval(1000))
-    dispatch(startTimer())
     return (
         <Stack pt={4} spacing={6}>
             <Stack spacing={2}>
